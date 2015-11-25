@@ -24,7 +24,7 @@ din eclipse wordspace. Alltså ställ dig där alla mappar för dina projekt är
 2. Skriv: `git add map eller fil`, tex `git add src/` för att pusha upp alla java filer
 3. Skriv: `git status` för att kolla så läget är okej
 4. Skriv: `git commit -m "Bra medelande om dina ändringar, helst på engelska"`.
-5. T.ex. `git add -m "Fixed collision in player class"`
+5. T.ex. `git commit -m "Fixed collision in player class"`
 6. Skriv: `git push origin master` för att pusha koden till github. 
 Skriv ditt användarnamn och lösenord för github
 
