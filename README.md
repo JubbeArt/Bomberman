@@ -16,7 +16,7 @@ din eclipse wordspace. Alltså ställ dig där alla mappar för dina projekt är
 ## How to fix with eclipse:
 1. Gå till menyn `File -> Import`
 2. `General -> Existing Project into Wordspace -> Next`
-3. `Select root directory -> Browse -> Välj mappan Bomberman`
+3. `Select root directory -> Browse -> Välj mappan Bomberman -> Finnish`
 4. Done
 
 ## How to upload (push) updated code to git:
