@@ -18,7 +18,7 @@ import javax.swing.JPanel;
  */
 public class Bomberman {
 
-	// Objekt för swing
+	// Objekt för swing asdasdas
 	private JFrame frame = null;
 	private JPanel windowContainer = null;
 	private GameInfo info = null;
