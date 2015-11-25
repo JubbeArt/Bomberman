@@ -12,7 +12,7 @@
 din eclipse wordspace. Alltså ställ dig där alla mappar för dina projekt är.
 3. Skriv: ```git```
 för att få in i git-mode.
-4. Hämta projektet genom att skriva: `git clone "git clone https://github.com/JubbeArt/Bomberman.git`
+4. Hämta projektet genom att skriva: `git clone https://github.com/JubbeArt/Bomberman.git`
 
 ## How to fix with eclipse:
 1. Gå till menyn `File -> Import`
@@ -24,11 +24,11 @@ för att få in i git-mode.
 1. Ställ dig i eclipse wordspace. Gå in till Bomberman mappen.
 2. Skriv: `git add map eller fil`, tex `git add src/` för att pusha upp alla java filer
 3. Skriv: `git status` för att kolla så läget är okej
-4. Skriv: `git commit -m "Bra medelande om dina ändringar, helst på engelska`, tex `git add -m "Fixed collision in player class`
+4. Skriv: `git commit -m "Bra medelande om dina ändringar, helst på engelska"`, tex `git add -m "Fixed collision in player class"`
 5. Skriv: `git push origin master`. 
 Skriv dit användarnamn och lösenord för github
 
-## How to get updated code from git:
+## How to get (pull) updated code from git:
 1. Ställ dig i Bomberman mappen
 2. Skriv: `git pull`
 3. Skriv: `git status` för att kolla att allt är OK
