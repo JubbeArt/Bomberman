@@ -24,7 +24,7 @@ public class Bomberman {
 	private GameInfo info = null;
 	private GameGraphics game = null;
 		
-	// Objekt för spelet 
+	// Objekt för spelet aaa
 	private GameBoard gameBoard = null;
 	private Player player1 = null;
 	private Player player2 = null;
