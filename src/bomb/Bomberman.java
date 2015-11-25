@@ -18,16 +18,16 @@ import javax.swing.JPanel;
  */
 public class Bomberman {
 
-	// Objekt för swing asdasdas
-	private JFrame frame = null;
-	private JPanel windowContainer = null;
-	private GameInfo info = null;
-	private GameGraphics game = null;
+	// Objekt för swing
+	private JFrame frame;
+	private JPanel windowContainer;
+	private GameInfo info;
+	private GameGraphics game;
 		
-	// Objekt för spelet aaa
-	private GameBoard gameBoard = null;
-	private Player player1 = null;
-	private Player player2 = null;
+	// Objekt för spelet
+	private GameBoard gameBoard;
+	private Player player1;
+	private Player player2;
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
 	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 900;
@@ -78,7 +78,7 @@ public class Bomberman {
 		windowContainer.add(info);
 		windowContainer.add(game);
 	
-		
+		// Keyboard-input
 		windowContainer.addKeyListener(new KeyListener() {
 			
 			@Override
@@ -98,8 +98,8 @@ public class Bomberman {
 			
 				int k = key.getKeyCode();
 				
-				
-				if(k== KeyEvent.VK_LEFT)
+				// Input för player1
+				if(k == KeyEvent.VK_LEFT)
 					player1.moveX(-1);
 				else if(k == KeyEvent.VK_RIGHT)
 					player1.moveX(1);
@@ -108,7 +108,7 @@ public class Bomberman {
 				else if(k == KeyEvent.VK_DOWN)
 					player1.moveY(1);
 				
-				//player2
+				// Input för player2
 				if(k == KeyEvent.VK_A)
 					player2.moveX(-1);
 				else if(k == KeyEvent.VK_D)
@@ -122,7 +122,9 @@ public class Bomberman {
 				game.repaint();
 			
 			}
-		}); 
+		});
+		
+		// Rätt container får fokus
 		windowContainer.setFocusable(true);		
 		
 		
