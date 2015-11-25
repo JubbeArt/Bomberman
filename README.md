@@ -10,7 +10,7 @@
 1. Öppna terminalen
 2. Flytta dig, med hjälp av dir (directory, visar filer och mappar) och cd (change directory) till
 din eclipse wordspace. Alltså ställ dig där alla mappar för dina projekt är.
-3. Skriv: `git`
+3. Skriv: ```git```
 för att få in i git-mode.
 4. Hämta projektet genom att skriva: `git clone "git clone https://github.com/JubbeArt/Bomberman.git`
 
@@ -25,8 +25,10 @@ för att få in i git-mode.
 2. Skriv: `git add map eller fil`, tex `git add src/` för att pusha upp alla java filer
 3. Skriv: `git status` för att kolla så läget är okej
 4. Skriv: `git commit -m "Bra medelande om dina ändringar, helst på engelska`, tex `git add -m "Fixed collision in player class`
-5. Skriv: `git push https://github.com/JubbeArt/Bomberman.git`. 
+5. Skriv: `git push origin master`. 
 Skriv dit användarnamn och lösenord för github
 
 ## How to get updated code from git:
-1. 
+1. Ställ dig i Bomberman mappen
+2. Skriv: `git pull`
+3. Skriv: `git status` för att kolla att allt är OK
