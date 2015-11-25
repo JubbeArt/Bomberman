@@ -6,7 +6,7 @@
 3. Säg till mig att du har gjort det här så jag kan lägga dig i projektet
 
 
-## How to download ("clone") the project:
+## How to download (clone) the project:
 1. Öppna terminalen
 2. Flytta dig, med hjälp av dir (directory, visar filer och mappar) och cd (change directory) till
 din eclipse wordspace. Alltså ställ dig där alla mappar för dina projekt är.
@@ -19,7 +19,7 @@ din eclipse wordspace. Alltså ställ dig där alla mappar för dina projekt är
 3. `Select root directory -> Browse -> Välj mappan Bomberman`
 4. Done
 
-## How to push updated code to git:
+## How to upload (push) updated code to git:
 1. Ställ dig i eclipse wordspace. Gå in till Bomberman mappen.
 2. Skriv: `git add map eller fil`, tex `git add src/` för att pusha upp alla java filer
 3. Skriv: `git status` för att kolla så läget är okej
