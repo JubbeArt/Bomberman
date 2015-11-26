@@ -3,7 +3,7 @@ package bomb;
 public class GameBoard {
 
 	
-	private static int[][] board = new int[15][15];
+	private int[][] board = new int[15][15];
 
 	public void setBoard(){
 		for(int i = 1; i<14; i+=2)
