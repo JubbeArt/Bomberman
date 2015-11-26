@@ -21,7 +21,7 @@ din eclipse wordspace. Alltså ställ dig där alla mappar för dina projekt är
 
 ## How to upload (push) updated code to git:
 1. Ställ dig i eclipse wordspace. Gå in till Bomberman mappen.
-2. Skriv: `git add map eller fil`, tex `git add src/` för att pusha upp alla java filer
+2. Skriv: `git add map eller fil`, tex `git add src/bomb/` för att pusha upp alla java filer
 3. Skriv: `git status` för att kolla så läget är okej
 4. Skriv: `git commit -m "Bra medelande om dina ändringar, helst på engelska"`.
 5. T.ex. `git commit -m "Fixed collision in player class"`
