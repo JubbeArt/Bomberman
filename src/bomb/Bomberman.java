@@ -158,16 +158,26 @@ public class Bomberman extends JPanel {
 
 	
 	public void startGame() {
-		// AYYYY LMAO - Abraham Lincon
-		// "Någon loop som loopar till spelet är slut" här
-		
-		//System.exit(0);
-		
 		gameBoard.setBoard();
+	
+		//1000 / 60 = 16.666... ms = 60fps
+		long currentTime, diff;
+		long oldTime = System.currentTimeMillis();		
+		long counter = System.currentTimeMillis();
 		
+		while(true) {
 		
-		// Hämtar den nuvarande tiden i millisekunder
-		//long currentTime = System.currentTimeMillis();
+			currentTime = System.currentTimeMillis(); // Nuvanrande tiden
+			diff = currentTime - oldTime; // Skillnaden mellan förra sparade tid			
+			
+			// Det har gått 1000 millisekunder sedan senaste sparande
+			if(diff > 1000) {
+				oldTime = currentTime; // Sparar undan tiden
+				System.out.println("Ca 1 sec, timer: " + (currentTime - counter) / 1000 + "");
+			}
+						
+			
+		}
 		
 	}
 	
