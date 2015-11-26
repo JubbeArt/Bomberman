@@ -127,7 +127,7 @@ public class Bomberman extends JPanel {
 					player2.moveY(1);
 				else if(k == KeyEvent.VK_SPACE)
 					bombs.add(new Bomb(player2.getX(), player2.getY()));
-				
+					
 				repaint();
 			
 			}
@@ -167,7 +167,7 @@ public class Bomberman extends JPanel {
 		
 		
 		// Hämtar den nuvarande tiden i millisekunder
-		long currentTime = System.currentTimeMillis();
+		//long currentTime = System.currentTimeMillis();
 		
 	}
 	
@@ -225,8 +225,9 @@ public class Bomberman extends JPanel {
 			}
 		}
 		
+		g2.setColor(Color.black);
 		for(Bomb bomb : bombs) {
-			
+			g2.fillRect(bomb.getX()*boxWidth+18, bomb.getY()*boxWidth+18, 15, 15);
 			
 			
 		}
