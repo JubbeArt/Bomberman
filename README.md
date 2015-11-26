@@ -31,4 +31,4 @@ Skriv ditt användarnamn och lösenord för github
 ## How to get (pull) updated code from git:
 1. Ställ dig i Bomberman mappen
 2. Skriv: `git pull`
-3. Skriv: `git status` för att kolla att allt är OK
+3. Skriv: `git status` för att kolla att allt är OK 
