@@ -1,6 +1,8 @@
 package bomb;
 
-public class Player extends GameBoard {
+public class Player {
+	
+	
 	private int xPos, yPos;
 	
 	Player() {
@@ -9,8 +11,7 @@ public class Player extends GameBoard {
 	}
 	
 	public void moveX(int x) {
-		if(checkSquare(xPos+x, yPos))
-			xPos += x;		
+		xPos += x;		
 		
 	}
 	
