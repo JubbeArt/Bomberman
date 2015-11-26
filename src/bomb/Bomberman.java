@@ -22,7 +22,7 @@ import javax.swing.JPanel;
  *
  */
 public class Bomberman extends JPanel {
-
+	//PUBIC PIRATE CLASS
 	// Objekt för swing
 	private static Bomberman game;
 	private JFrame frame;
