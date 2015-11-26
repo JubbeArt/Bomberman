@@ -5,14 +5,14 @@ public class Player extends GameBoard{
 	
 	private int xPos, yPos;
 	
-	Player() {
-		xPos = 0;
-		yPos = 0;
+	Player(int x, int y) {
+		xPos = x;
+		yPos = y;
 	}
 	
 	public void moveX(int x) {
 		
-		if(checkSquare(xPos+x, yPos)) {
+		if(checkSquare(xPos + x, yPos, 0)) {
 			xPos += x;	
 		} else {
 			//"Bumpsound"
@@ -21,7 +21,7 @@ public class Player extends GameBoard{
 		
 	public void moveY(int y) {
 		
-		if(checkSquare(xPos, yPos+y)) {
+		if(checkSquare(xPos, yPos+y, 0)) {
 			yPos += y;	
 		} else {
 			//"Bumpsound"

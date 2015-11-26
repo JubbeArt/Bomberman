@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -37,6 +39,7 @@ public class Bomberman extends JPanel {
 	private GameBoard gameBoard;
 	private Player player1;
 	private Player player2;
+	private Set<Bomb> bombs;;
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
 	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 900;
@@ -74,8 +77,9 @@ public class Bomberman extends JPanel {
 		
 		// Initialisera alla spelobjekt
 		gameBoard = new GameBoard();
-		player1 = new Player();
-		player2 = new Player();
+		player1 = new Player(0, 0);
+		player2 = new Player(14, 0);
+		bombs = new HashSet<Bomb>();
 	}
 	
 
@@ -109,6 +113,8 @@ public class Bomberman extends JPanel {
 					player1.moveY(-1);
 				else if(k == KeyEvent.VK_DOWN)
 					player1.moveY(1);
+				else if(k == KeyEvent.VK_ENTER)
+					bombs.add(new Bomb(player1.getX(), player1.getY()));
 				
 				// Input för player2
 				else if(k == KeyEvent.VK_A)
@@ -119,6 +125,8 @@ public class Bomberman extends JPanel {
 					player2.moveY(-1);
 				else if(k == KeyEvent.VK_S)
 					player2.moveY(1);
+				else if(k == KeyEvent.VK_SPACE)
+					bombs.add(new Bomb(player2.getX(), player2.getY()));
 				
 				repaint();
 			
@@ -187,20 +195,6 @@ public class Bomberman extends JPanel {
 		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta är
 		int pos;	// Positionen där den ska börja rita
 		
-		// Sätter storleken på borsten till 4 pixlar
-		g2.setStroke(new BasicStroke(4));
-		
-		for(int i = 0; i <= boardSize; i++) {
-			pos = i * boxWidth;
-						
-			// Horizontella sträck
-			//		   x1  y1      x2      y2
-			g2.drawLine(0, pos, GAME_WIDTH, pos);
-			
-			// Vertikala sträck
-			//          x1  y1   x2      y2
-			g2.drawLine(pos, 0, pos, GAME_HEIGHT);
-		}	
 		
 		
 		/*
@@ -213,15 +207,51 @@ public class Bomberman extends JPanel {
 			}
 		}
 		*/
-		g2.setColor(Color.gray);
-		for(int i = 1; i<14; i+=2)
-			for(int j = 1; j<14; j+=2)
-				g2.fillRect(i * boxWidth, j * boxWidth, boxWidth, boxWidth);
+		
+		
+		
+		for(int x = 0; x < 15; x++) {
+			for(int y = 0; y < 15; y++) {
+				if(gameBoard.at(x, y) == 2) {
+					g2.setColor(new Color(139, 69, 19));
+				}
+				else if(gameBoard.at(x, y) == 1)
+					g2.setColor(Color.gray);
+				else	
+					g2.setColor(Color.white);
+				
+					
+				g2.fillRect(x * boxWidth,  y * boxWidth, boxWidth, boxWidth);
+			}
+		}
+		
+		for(Bomb bomb : bombs) {
+			
+			
+			
+		}
 		
 		g2.setColor(Color.GREEN);
-		g2.drawRect(player1.getX() * boxWidth, player1.getY() * boxWidth, boxWidth, boxWidth);
+		g2.fillRect(player1.getX() * boxWidth, player1.getY() * boxWidth, boxWidth, boxWidth);
 		
 		g2.setColor(new Color(255, 105, 180));
-		g2.drawRect(player2.getX() * boxWidth, player2.getY() * boxWidth, boxWidth, boxWidth);
+		g2.fillRect(player2.getX() * boxWidth, player2.getY() * boxWidth, boxWidth, boxWidth);
+		
+		// Sätter storleken på borsten till 4 pixlar
+		g2.setStroke(new BasicStroke(4));
+		g2.setColor(Color.black);
+		
+		for(int i = 0; i <= boardSize; i++) {
+			pos = i * boxWidth;
+								
+			// Horizontella sträck
+			//		   x1  y1      x2      y2
+			g2.drawLine(0, pos, GAME_WIDTH, pos);
+					
+			// Vertikala sträck
+			//          x1  y1   x2      y2
+			g2.drawLine(pos, 0, pos, GAME_HEIGHT);
+		}	
+				
 	}
 }
