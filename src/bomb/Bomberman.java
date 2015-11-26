@@ -22,7 +22,7 @@ import javax.swing.JPanel;
  *
  */
 public class Bomberman extends JPanel {
-	//PUBIC PIRATE CLASS
+
 	// Objekt för swing
 	private static Bomberman game;
 	private JFrame frame;
@@ -154,6 +154,9 @@ public class Bomberman extends JPanel {
 		// "Någon loop som loopar till spelet är slut" här
 		
 		//System.exit(0);
+		
+		gameBoard.setBoard();
+		
 		
 		// Hämtar den nuvarande tiden i millisekunder
 		long currentTime = System.currentTimeMillis();

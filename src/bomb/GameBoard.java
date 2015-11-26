@@ -3,7 +3,7 @@ package bomb;
 public class GameBoard {
 
 	
-	private int[][] board = new int[15][15];
+	private static int[][] board = new int[15][15];
 
 	public void setBoard(){
 		for(int i = 1; i<14; i+=2)
@@ -16,6 +16,8 @@ public class GameBoard {
 	}
 	
 	public boolean checkSquare(int x, int y) {
+		if(x<0 || x>14 || y<0 || y>14)
+			return false;
 		
 		if(board[x][y] == 1)
 			return false;

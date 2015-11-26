@@ -1,6 +1,6 @@
 package bomb;
 
-public class Player {
+public class Player extends GameBoard{
 	
 	
 	private int xPos, yPos;
@@ -11,14 +11,21 @@ public class Player {
 	}
 	
 	public void moveX(int x) {
-		xPos += x;		
 		
+		if(checkSquare(xPos+x, yPos)) {
+			xPos += x;	
+		} else {
+			//"Bumpsound"
+		}
 	}
-	
-	
-	
+		
 	public void moveY(int y) {
-		yPos += y;		
+		
+		if(checkSquare(xPos, yPos+y)) {
+			yPos += y;	
+		} else {
+			//"Bumpsound"
+		}	
 		
 	}	
 	
