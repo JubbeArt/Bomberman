@@ -1,6 +1,6 @@
 package bomb;
 
-public class Player extends GameBoard{
+public class Player extends Entity{
 	
 	
 	private int xPos, yPos;

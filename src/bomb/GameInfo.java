@@ -37,7 +37,7 @@ public class GameInfo extends JPanel {
 		
 		// Skapar textrutorna med den text de ska skriva ut
 		gameTitle = new JLabel(name); // Kan skriva HTML-kod här... wtf?
-		gameTime = new JLabel("00:01");
+		gameTime = new JLabel("00:00");
 		gameOver = new JLabel("NOT GAME OVER... DAMM hey sam sam ^-^ so kawaiiIII how yo doin?");
 		
 		// Lägger till textrutorna i panelen

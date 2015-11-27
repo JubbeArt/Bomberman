@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.BoxLayout;
@@ -45,9 +46,9 @@ public class Bomberman extends JPanel {
 	private Set<Bomb> bombs;;
 	
 	// Storlekar pÃ¥ fÃ¶nstret och alla containrar (JPanel)
-	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 900;
+	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 800;
 	private final int GAME_WIDTH = 750, GAME_HEIGHT = 750;
-	private final int INFO_WIDTH = 750, INFO_HEIGHT = 150;
+	private final int INFO_WIDTH = 750, INFO_HEIGHT = 50;
 	
 	public Bomberman() {
 		
@@ -129,10 +130,7 @@ public class Bomberman extends JPanel {
 				else if(k == KeyEvent.VK_S)
 					player2.moveY(1);
 				else if(k == KeyEvent.VK_SPACE)
-					bombs.add(new Bomb(player2.getX(), player2.getY()));
-					
-				repaint();
-			
+					bombs.add(new Bomb(player2.getX(), player2.getY()));			
 			}
 			
 			@Override
@@ -174,21 +172,20 @@ public class Bomberman extends JPanel {
 			diff = currentTime - oldTime; // Skillnaden mellan fÃ¶rra sparade tid			
 			
 			// Det har gÃ¥tt 1000 millisekunder sedan senaste sparande
-			if(diff > 1000) {
+			if(diff > 17) {
 				oldTime = currentTime; // Sparar undan tiden
 				System.out.println("Ca 1 sec, timer: " + (currentTime - counter) / 1000 + "");
 				
-				//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
-				for(Bomb bomb: bombs)
-                	if(bomb.hasDetonated()) {
-                		bombs.remove(bomb);
-                		repaint();
-                	}
-				//Craschar om man spammar bomb-knappen
-			}
 				
-			
-			
+				Iterator<Bomb> itBomb = bombs.iterator();
+				//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
+				while(itBomb.hasNext())
+					if(itBomb.next().hasDetonated())
+						itBomb.remove();
+								
+				repaint();
+				}
+							
 		}
 		
 	}
@@ -247,18 +244,18 @@ public class Bomberman extends JPanel {
 			}
 		}
 		
-		g2.setColor(Color.black);
-		for(Bomb bomb : bombs) {
-			g2.fillRect(bomb.getX()*boxWidth+18, bomb.getY()*boxWidth+18, 15, 15);
-			
-			
-		}
+		
 		
 		g2.setColor(Color.GREEN);
 		g2.fillRect(player1.getX() * boxWidth, player1.getY() * boxWidth, boxWidth, boxWidth);
 		
 		g2.setColor(new Color(255, 105, 180));
 		g2.fillRect(player2.getX() * boxWidth, player2.getY() * boxWidth, boxWidth, boxWidth);
+		
+		//Draw bombs
+		g2.setColor(Color.black);
+		for(Bomb bomb : bombs)
+			g2.fillRect(bomb.getX()*boxWidth+18, bomb.getY()*boxWidth+18, 15, 15);
 		
 		// SÃ¤tter storleken pÃ¥ borsten till 4 pixlar
 		g2.setStroke(new BasicStroke(4));
