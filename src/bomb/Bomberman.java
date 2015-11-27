@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
@@ -14,6 +16,7 @@ import java.util.Set;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * Best game ever made... by the best guys ever made
@@ -174,8 +177,17 @@ public class Bomberman extends JPanel {
 			if(diff > 1000) {
 				oldTime = currentTime; // Sparar undan tiden
 				System.out.println("Ca 1 sec, timer: " + (currentTime - counter) / 1000 + "");
+				
+				//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
+				for(Bomb bomb: bombs)
+                	if(bomb.hasDetonated()) {
+                		bombs.remove(bomb);
+                		repaint();
+                	}
+				//Craschar om man spammar bomb-knappen
 			}
-						
+				
+			
 			
 		}
 		

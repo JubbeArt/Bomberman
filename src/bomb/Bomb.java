@@ -18,6 +18,7 @@ public class Bomb extends GameBoard{
 	private int xPos;
 	private int yPos;
 	private int time;
+	private boolean detonated = false;
 	
 	Bomb(int x, int y) {
 		xPos = x;
@@ -30,7 +31,7 @@ public class Bomb extends GameBoard{
                 
             }
         };
-        Timer timer = new Timer(100 ,taskPerformer);
+        Timer timer = new Timer(1000 ,taskPerformer);
         timer.setRepeats(false);
         timer.start();
 
@@ -50,7 +51,7 @@ public class Bomb extends GameBoard{
 		if(checkSquare(xPos, yPos-1, 2))
 			setSquare(xPos, yPos-1, 0);
 		
-		//Call for removal
+		detonated = true;
 	}
 	
 	public int getX() {
@@ -59,6 +60,10 @@ public class Bomb extends GameBoard{
 	
 	public int getY() {
 		return yPos;
+	}
+	
+	public boolean hasDetonated(){
+		return detonated;
 	}
 	
 }
