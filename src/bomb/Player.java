@@ -3,37 +3,31 @@ package bomb;
 public class Player extends Entity{
 	
 	
-	private int xPos, yPos;
+	private int power;
 	
 	Player(int x, int y) {
-		xPos = x;
-		yPos = y;
+		super(x, y);
+		power = 1;
 	}
 	
-	public void moveX(int x) {
-		
-		if(checkSquare(xPos + x, yPos, 0)) {
+	Player(int x, int y, int p) {
+		super(x, y);	 
+		power = p;
+	}
+	
+	public void moveX(int x) {		
+		if(checkSquare(xPos + x, yPos, 0))
 			xPos += x;	
-		} else {
-			//"Bumpsound"
-		}
+
 	}
 		
-	public void moveY(int y) {
-		
-		if(checkSquare(xPos, yPos+y, 0)) {
-			yPos += y;	
-		} else {
-			//"Bumpsound"
-		}	
-		
+	public void moveY(int y) {		
+		if(checkSquare(xPos, yPos+y, 0))
+			yPos += y;		
 	}	
 	
-	public int getX() {
-		return xPos;
+	public int getPower() {
+		return power;
 	}
 	
-	public int getY() {
-		return yPos;
-	}
 }

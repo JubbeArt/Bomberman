@@ -81,8 +81,8 @@ public class Bomberman extends JPanel {
 		
 		// Initialisera alla spelobjekt
 		gameBoard = new GameBoard();
-		player1 = new Player(0, 0);
-		player2 = new Player(14, 0);
+		player1 = new Player(0, 0, 5);
+		player2 = new Player(14, 0, 5);
 		bombs = new HashSet<Bomb>();
 	}
 	
@@ -118,7 +118,7 @@ public class Bomberman extends JPanel {
 				else if(k == KeyEvent.VK_DOWN)
 					player1.moveY(1);
 				else if(k == KeyEvent.VK_ENTER)
-					bombs.add(new Bomb(player1.getX(), player1.getY()));
+					bombs.add(new Bomb(player1.getX(), player1.getY(), player1.getPower(), System.currentTimeMillis()));
 				
 				// Input fÃ¶r player2
 				else if(k == KeyEvent.VK_A)
@@ -130,7 +130,7 @@ public class Bomberman extends JPanel {
 				else if(k == KeyEvent.VK_S)
 					player2.moveY(1);
 				else if(k == KeyEvent.VK_SPACE)
-					bombs.add(new Bomb(player2.getX(), player2.getY()));			
+					bombs.add(new Bomb(player2.getX(), player2.getY(), player2.getPower(), System.currentTimeMillis()));			
 			}
 			
 			@Override
@@ -176,15 +176,23 @@ public class Bomberman extends JPanel {
 				oldTime = currentTime; // Sparar undan tiden
 				System.out.println("Ca 1 sec, timer: " + (currentTime - counter) / 1000 + "");
 				
-				
 				Iterator<Bomb> itBomb = bombs.iterator();
-				//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
-				while(itBomb.hasNext())
-					if(itBomb.next().hasDetonated())
+				//Gï¿½r igenom bomberna och kollar om nï¿½gon detonerat. Isf tar bort bomben och ritar om planen
+				Bomb tmpBomb = null;
+				while(itBomb.hasNext()) {
+					tmpBomb = itBomb.next();
+					tmpBomb.updateBomb(currentTime);
+					
+					if(tmpBomb.hasDetonated()) {
+						tmpBomb.expload();
 						itBomb.remove();
 								
+					}	
+						
+				}	
+			
 				repaint();
-				}
+			}
 							
 		}
 		
@@ -251,6 +259,7 @@ public class Bomberman extends JPanel {
 		
 		g2.setColor(new Color(255, 105, 180));
 		g2.fillRect(player2.getX() * boxWidth, player2.getY() * boxWidth, boxWidth, boxWidth);
+		
 		
 		//Draw bombs
 		g2.setColor(Color.black);
