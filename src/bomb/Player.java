@@ -3,7 +3,7 @@ package bomb;
 public class Player extends Entity{
 	
 	
-	private int power;
+	private int power; // Hur kraftfulla spelarens bomber är
 	
 	Player(int x, int y) {
 		super(x, y);

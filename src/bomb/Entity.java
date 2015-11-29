@@ -1,5 +1,6 @@
 package bomb;
 
+// Abrstakt klass för alla objekt på spelplanen
 public abstract class Entity extends GameBoard{
 	
 	protected int xPos, yPos;

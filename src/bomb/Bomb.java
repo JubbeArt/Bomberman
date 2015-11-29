@@ -1,25 +1,11 @@
 package bomb;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Timer;
-
 public class Bomb extends Entity {
-	/*
-	 * TODO : ABRACKTRAOR KLCASS
-	 * Timer
-	 * Explosion
-	 * */
-	
-	
-	
-	
-	private int power;
+
+	private int power; // Hur många rutor bomben kan spränga
 	private long startTime;
 	private boolean detonated;
 	private long timeToExplode;
-	
 	
 	Bomb(int x, int y, int power, long time) {
 		super(x, y);
@@ -27,28 +13,16 @@ public class Bomb extends Entity {
 		startTime = time;
 		
 		timeToExplode = 1000;
-		detonated = false;
-		
-	/*	ActionListener taskPerformer = new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                System.out.println("Exploading");
-            	expload();
-                
-            }
-        };
-        Timer timer = new Timer(1000 ,taskPerformer);
-        timer.setRepeats(false);
-        timer.start();
-*/
-        //Thread.sleep(5000); G�r vad�?
 	}
 	
-	public void expload() {
+	// Exploderar bomben
+	public void explode() {
 		
+		// Loopar igenom mer desto starkare bomben är
 		for(int i = 1; i <= power; i++) {
 			
-			if(checkSquare(xPos + i, yPos, 2))
-				setSquare(xPos + i, yPos, 0);
+			if(checkSquare(xPos + i, yPos, 2)) // Kollar om det är en låda
+				setSquare(xPos + i, yPos, 0); // Tar bort lådan
 	
 			if(checkSquare(xPos - i, yPos, 2))
 				setSquare(xPos - i, yPos, 0);			
@@ -64,9 +38,14 @@ public class Bomb extends Entity {
 		detonated = true;
 	}
 	
-	public void updateBomb(long currentTime) {
-		if(currentTime - startTime > timeToExplode)
+	// Kollar om det är dags att spränga skiten
+	public boolean updateBomb(long currentTime) {
+		if(currentTime - startTime > timeToExplode) {
 			detonated = true;
+			explode();
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean hasDetonated(){

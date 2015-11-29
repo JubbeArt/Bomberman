@@ -16,6 +16,7 @@ import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -33,7 +34,10 @@ public class Bomberman extends JPanel {
 	private static Bomberman game;
 	private JFrame frame;
 	private JPanel windowContainer;
-	private GameInfo info;
+	
+	private JPanel info;
+	private JLabel infoTime;
+	private JLabel infoTitle;
 	
 	
 	// Ritobjekt för panelen
@@ -43,12 +47,15 @@ public class Bomberman extends JPanel {
 	private GameBoard gameBoard;
 	private Player player1;
 	private Player player2;
-	private Set<Bomb> bombs;;
+	private Set<Bomb> bombs;
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
-	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 800;
+	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 850;
 	private final int GAME_WIDTH = 750, GAME_HEIGHT = 750;
-	private final int INFO_WIDTH = 750, INFO_HEIGHT = 50;
+	private final int INFO_WIDTH = 750, INFO_HEIGHT = 100;
+	
+	// Titlen på spelet såklart
+	private String title = "BOMBERMAN!!½1!";
 	
 	public Bomberman() {
 		
@@ -81,6 +88,7 @@ public class Bomberman extends JPanel {
 		
 		// Initialisera alla spelobjekt
 		gameBoard = new GameBoard();
+		gameBoard.setBoard();
 		player1 = new Player(0, 0, 5);
 		player2 = new Player(14, 0, 5);
 		bombs = new HashSet<Bomb>();
@@ -94,8 +102,20 @@ public class Bomberman extends JPanel {
 		// Bestämmer hur containern ska ska visas våra paneler (Y_AXIS = Uppifrån och neråt)
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.Y_AXIS));		
 		
-		info = new GameInfo(INFO_WIDTH, INFO_HEIGHT);	// Den övere panelen med info om spelet
-				
+		info = new JPanel();	// Den övere panelen med info om spelet
+		info.setPreferredSize(new Dimension(INFO_WIDTH, INFO_HEIGHT));	
+		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+		
+		infoTitle = new JLabel("<html><h1>" + title + "</h1></html>");
+		infoTitle.setHorizontalAlignment(JLabel.CENTER);
+		infoTitle.setForeground(new Color(0, 0, 130));
+		
+		
+		infoTime = new JLabel("Time : 60 sec left");
+		
+		info.add(infoTitle);
+		info.add(infoTime);		
+		
 		// Lägger till info-delen och spelplanen till vår main-container
 		windowContainer.add(info);
 		windowContainer.add(game);
@@ -134,13 +154,10 @@ public class Bomberman extends JPanel {
 			}
 			
 			@Override
-			public void keyReleased(KeyEvent arg0) {
-				
-				
-			}
+			public void keyReleased(KeyEvent key) {}
 
 			@Override
-			public void keyTyped(KeyEvent e) {}
+			public void keyTyped(KeyEvent key) {}
 		});
 		
 		// Rätt container får fokus
@@ -158,40 +175,32 @@ public class Bomberman extends JPanel {
 	
 
 	
-	public void startGame() {
-		gameBoard.setBoard();
-	
+	public void startGame() {	
 		//1000 / 60 = 16.666... ms = 60fps
 		long currentTime, diff;
 		long oldTime = System.currentTimeMillis();		
-		long counter = System.currentTimeMillis();
+	
+		long gameTime = 60 * 1000;
 		
 		while(true) {
-		
 			currentTime = System.currentTimeMillis(); // Nuvanrande tiden
 			diff = currentTime - oldTime; // Skillnaden mellan förra sparade tid			
-			
-			// Det har gått 1000 millisekunder sedan senaste sparande
+				
+			// Det har gått 1000/60 millisekunder sedan senaste sparande
 			if(diff > 17) {
 				oldTime = currentTime; // Sparar undan tiden
-				System.out.println("Ca 1 sec, timer: " + (currentTime - counter) / 1000 + "");
+				gameTime -= diff; // Minskar spelklockan med differensen
 				
 				Iterator<Bomb> itBomb = bombs.iterator();
-				//G�r igenom bomberna och kollar om n�gon detonerat. Isf tar bort bomben och ritar om planen
-				Bomb tmpBomb = null;
+				//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
 				while(itBomb.hasNext()) {
-					tmpBomb = itBomb.next();
-					tmpBomb.updateBomb(currentTime);
-					
-					if(tmpBomb.hasDetonated()) {
-						tmpBomb.expload();
-						itBomb.remove();
-								
-					}	
-						
+					if(itBomb.next().updateBomb(currentTime))
+						itBomb.remove();			
 				}	
 			
-				repaint();
+				repaint();				
+				infoTime.setText("Time : " + gameTime +" sec left");
+				
 			}
 							
 		}
@@ -221,27 +230,12 @@ public class Bomberman extends JPanel {
 		int boardSize = 15; // Antal rutor på spelplanen (i x- och y-led)
 		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta är
 		int pos;	// Positionen där den ska börja rita
-		
-		
-		
-		/*
-		for(int i = 0; i < 15; i++) {
-			for(int j = 0; j < 15; j++) {
 			
-				if(board[i][j] == 1)
-					g2.drawRect(i * boxWidth, j * boxWidth, boxWidth, boxWidth);
-				
-			}
-		}
-		*/
-		
-		
 		
 		for(int x = 0; x < 15; x++) {
 			for(int y = 0; y < 15; y++) {
-				if(gameBoard.at(x, y) == 2) {
+				if(gameBoard.at(x, y) == 2)
 					g2.setColor(new Color(139, 69, 19));
-				}
 				else if(gameBoard.at(x, y) == 1)
 					g2.setColor(Color.gray);
 				else	
