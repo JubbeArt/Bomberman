@@ -4,7 +4,7 @@ public class GameBoard {
 
 	
 	private static int[][] board = new int[15][15];
-	public enum squares {Empty, Stone, Crate};
+	public enum square {Empty, Stone, Crate};
 	
 	// Återställer sprlplanen till grundläget
 	public void setBoard(){

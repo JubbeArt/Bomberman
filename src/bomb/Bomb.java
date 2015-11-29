@@ -13,6 +13,7 @@ public class Bomb extends Entity {
 		startTime = time;
 		
 		timeToExplode = 1000;
+		detonated = false;
 	}
 	
 	// Exploderar bomben
