@@ -173,7 +173,6 @@ public class Bomberman extends JPanel {
 		frame.setVisible(true);
 	}
 	
-
 	
 	public void startGame() {	
 		//1000 / 60 = 16.666... ms = 60fps
@@ -197,10 +196,13 @@ public class Bomberman extends JPanel {
 					if(itBomb.next().updateBomb(currentTime))
 						itBomb.remove();			
 				}	
-			
-				repaint();				
-				infoTime.setText("Time : " + gameTime +" sec left");
 				
+				repaint();				
+				
+				if(gameTime>0)
+					infoTime.setText("Time : " + gameTime +" ms left");
+				else
+					infoTime.setText("Time : GameOver Bich");
 			}
 							
 		}
