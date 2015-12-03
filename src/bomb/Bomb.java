@@ -6,11 +6,14 @@ public class Bomb extends Entity {
 	private long startTime;
 	private boolean detonated;
 	private long timeToExplode;
+	private int owner;
 	
-	Bomb(int x, int y, int power, long time) {
+	Bomb(int x, int y, int power, long time, int owner) {
 		super(x, y);
 		this.power = power;
+		this.owner = owner;
 		startTime = time;
+		
 		
 		timeToExplode = 1000;
 		detonated = false;
@@ -52,5 +55,10 @@ public class Bomb extends Entity {
 	public boolean hasDetonated(){
 		return detonated;
 	}
+	
+	public int getOwner() {
+		return owner;
+	}
+	
 	
 }

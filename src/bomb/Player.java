@@ -5,6 +5,8 @@ public class Player extends Entity{
 	
 	private int power; // Hur kraftfulla spelarens bomber är
 	private int health = 1;
+	private int bombLimit = 1;
+	private int bombsUsed = 0; 
 	
 	Player(int x, int y) {
 		super(x, y);
@@ -33,7 +35,18 @@ public class Player extends Entity{
 	
 	public void died() {
 		if(health<1)
-			System.out.println("You diededededed!");
+			System.out.println("You diededededed owated wam!");
 	}
 	
+	public void changeBombsUsed(int x) {
+		bombsUsed += x;
+	}
+	
+	public int getBombLimit() {
+		return bombLimit;
+	}
+	
+	public int getBombsUsed() {
+		return bombsUsed;
+	}
 }

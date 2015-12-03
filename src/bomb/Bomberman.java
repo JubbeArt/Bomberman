@@ -28,6 +28,12 @@ import javax.swing.Timer;
  * @author Baron Jesper Wrang (jeswr740) and Lord Samuel von Johansson (samjo788)
  *
  */
+
+/* TODO:
+ * 
+ * ALLT
+ * 
+ * */
 public class Bomberman extends JPanel {
 
 	// Objekt för swing
@@ -44,9 +50,9 @@ public class Bomberman extends JPanel {
 	private Graphics2D g2;
 		
 	// Objekt för spelet
-	private GameBoard gameBoard;
-	private Player player1;
-	private Player player2;
+	private GameBoard gameBoard;	
+	private Player[] players;
+	
 	private Set<Bomb> bombs;
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
@@ -89,8 +95,13 @@ public class Bomberman extends JPanel {
 		// Initialisera alla spelobjekt
 		gameBoard = new GameBoard();
 		gameBoard.setBoard();
-		player1 = new Player(0, 0, 5);
-		player2 = new Player(14, 0, 5);
+		
+		
+		players = new Player[]{new Player(0, 0, 5),
+							   new Player(14, 0, 2)
+		};
+		
+	
 		bombs = new HashSet<Bomb>();
 	}
 	
@@ -122,35 +133,35 @@ public class Bomberman extends JPanel {
 	
 		// Keyboard-input
 		windowContainer.addKeyListener(new KeyListener() {
-								
+				
+			int[] left = {KeyEvent.VK_A, KeyEvent.VK_LEFT};
+			int[] right = {KeyEvent.VK_D, KeyEvent.VK_RIGHT};
+			int[] up = {KeyEvent.VK_W, KeyEvent.VK_UP};
+			int[] down = {KeyEvent.VK_S, KeyEvent.VK_DOWN};
+			int[] bomb = {KeyEvent.VK_SPACE, KeyEvent.VK_ENTER};
+			
 			@Override
 			public void keyPressed(KeyEvent key) {
 			
 				int k = key.getKeyCode();
 				
-				// Input för player1
-				if(k == KeyEvent.VK_LEFT)
-					player1.moveX(-1);
-				else if(k == KeyEvent.VK_RIGHT)
-					player1.moveX(1);
-				else if(k == KeyEvent.VK_UP)
-					player1.moveY(-1);
-				else if(k == KeyEvent.VK_DOWN)
-					player1.moveY(1);
-				else if(k == KeyEvent.VK_ENTER)
-					bombs.add(new Bomb(player1.getX(), player1.getY(), player1.getPower(), System.currentTimeMillis()));
-				
-				// Input för player2
-				else if(k == KeyEvent.VK_A)
-					player2.moveX(-1);
-				else if(k == KeyEvent.VK_D)
-					player2.moveX(1);
-				else if(k == KeyEvent.VK_W)
-					player2.moveY(-1);
-				else if(k == KeyEvent.VK_S)
-					player2.moveY(1);
-				else if(k == KeyEvent.VK_SPACE)
-					bombs.add(new Bomb(player2.getX(), player2.getY(), player2.getPower(), System.currentTimeMillis()));			
+				for(int i = 0; i < players.length; i++) {				
+					// Input för player1
+					if(k == left[i])
+						players[i].moveX(-1);
+					else if(k == right[i])
+						players[i].moveX(1);
+					else if(k == up[i])
+						players[i].moveY(-1);
+					else if(k == down[i])
+						players[i].moveY(1);
+					else if(k == bomb[i]) {
+						if(players[i].getBombsUsed() < players[i].getBombLimit()) {
+							bombs.add(new Bomb(players[i].getX(), players[i].getY(), players[i].getPower(), System.currentTimeMillis(), i));
+							players[i].changeBombsUsed(1);
+						}
+					}
+				}				
 			}
 			
 			@Override
@@ -191,10 +202,18 @@ public class Bomberman extends JPanel {
 				gameTime -= diff; // Minskar spelklockan med differensen
 				
 				Iterator<Bomb> itBomb = bombs.iterator();
+				Bomb tmpBomb;
 				//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
 				while(itBomb.hasNext()) {
-					if(itBomb.next().updateBomb(currentTime))
+					tmpBomb = itBomb.next();
+					
+					
+					if(tmpBomb.updateBomb(currentTime)) {
+						int owner = tmpBomb.getOwner();
+						players[owner].changeBombsUsed(-1);
 						itBomb.remove();			
+						
+					}
 				}	
 				
 				repaint();				
@@ -248,15 +267,15 @@ public class Bomberman extends JPanel {
 			}
 		}
 		
-		
-		
-		g2.setColor(Color.GREEN);
-		g2.fillRect(player1.getX() * boxWidth, player1.getY() * boxWidth, boxWidth, boxWidth);
-		
-		g2.setColor(new Color(255, 105, 180));
-		g2.fillRect(player2.getX() * boxWidth, player2.getY() * boxWidth, boxWidth, boxWidth);
-		
-		
+		for(int i = 0; i < players.length; i++) {
+			if(i == 0)
+				g2.setColor(Color.GREEN);
+			else
+				g2.setColor(new Color(255, 105, 180));
+			
+			g2.fillRect(players[i].getX() * boxWidth, players[i].getY() * boxWidth, boxWidth, boxWidth);	
+		}
+				
 		//Draw bombs
 		g2.setColor(Color.black);
 		for(Bomb bomb : bombs)

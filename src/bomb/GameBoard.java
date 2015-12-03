@@ -1,7 +1,6 @@
 package bomb;
 
 public class GameBoard {
-
 	
 	private static int[][] board = new int[15][15];
 	public enum square {Empty, Stone, Crate};
