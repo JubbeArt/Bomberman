@@ -6,7 +6,7 @@ public class GameBoard {
 	public enum square {Empty, Stone, Crate};
 	
 	// Återställer sprlplanen till grundläget
-	public void setBoard(){
+	public void resetBoard(){
 		
 		// Lådor
 		for(int i = 0; i < 15; i++)

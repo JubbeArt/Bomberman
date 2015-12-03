@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
@@ -18,7 +16,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 /**
  * Best game ever made... by the best guys ever made
@@ -37,22 +34,18 @@ import javax.swing.Timer;
 public class Bomberman extends JPanel {
 
 	// Objekt för swing
-	private static Bomberman game;
 	private JFrame frame;
 	private JPanel windowContainer;
 	
 	private JPanel info;
-	private JLabel infoTime;
-	private JLabel infoTitle;
-	
+	private JLabel infoTime, infoTitle;
 	
 	// Ritobjekt för panelen
 	private Graphics2D g2;
 		
 	// Objekt för spelet
 	private GameBoard gameBoard;	
-	private Player[] players;
-	
+	private Player[] players;	
 	private Set<Bomb> bombs;
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
@@ -63,52 +56,38 @@ public class Bomberman extends JPanel {
 	// Titlen på spelet såklart
 	private String title = "BOMBERMAN!!½1!";
 	
-	public Bomberman() {
-		
+	public Bomberman() {		
 		// Sätter och sparar undan storleken på panelen
-		setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
-
+		setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));	
 		
-	}
-	public static void main(String[] args) {
-		
-		game = new Bomberman();
-		game.createWindow();
-		game.createGame();
-		game.createContainer();
-		game.showWindow();
-		
-		game.startGame();		
-	}
-	
-	public void createWindow() {
 		frame = new JFrame("Bomberman... Kappa"); 	// Själva fönstret
 		
 		// Inställningar för fönsteret
 		frame.setResizable(false);
 		frame.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);			
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+	}
+	public static void main(String[] args) {
+		
+		Bomberman game = new Bomberman();
+		game.createGame();
+		game.createContainer();
+		game.showWindow();		
+		game.startGame();		
 	}
 	
-	public void createGame() {				
-		
+	public void createGame() {			
 		// Initialisera alla spelobjekt
 		gameBoard = new GameBoard();
-		gameBoard.setBoard();
-		
-		
-		players = new Player[]{new Player(0, 0, 5),
-							   new Player(14, 0, 2)
-		};
-		
-	
+		gameBoard.resetBoard();
+				
+		players = new Player[]{new Player(0, 0), new Player(14, 0)};
 		bombs = new HashSet<Bomb>();
-	}
-	
+	}	
 
-	public void createContainer() {
-		
-		windowContainer = new JPanel();	//Main-container		
+	public void createContainer() {	
+		//Main-container
+		windowContainer = new JPanel();		
 		
 		// Bestämmer hur containern ska ska visas våra paneler (Y_AXIS = Uppifrån och neråt)
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.Y_AXIS));		
@@ -129,16 +108,16 @@ public class Bomberman extends JPanel {
 		
 		// Lägger till info-delen och spelplanen till vår main-container
 		windowContainer.add(info);
-		windowContainer.add(game);
+		windowContainer.add(this);
 	
 		// Keyboard-input
 		windowContainer.addKeyListener(new KeyListener() {
 				
-			int[] left = {KeyEvent.VK_A, KeyEvent.VK_LEFT};
-			int[] right = {KeyEvent.VK_D, KeyEvent.VK_RIGHT};
-			int[] up = {KeyEvent.VK_W, KeyEvent.VK_UP};
-			int[] down = {KeyEvent.VK_S, KeyEvent.VK_DOWN};
-			int[] bomb = {KeyEvent.VK_SPACE, KeyEvent.VK_ENTER};
+			int[] left = {KeyEvent.VK_A, KeyEvent.VK_LEFT, KeyEvent.VK_NUMPAD4};
+			int[] right = {KeyEvent.VK_D, KeyEvent.VK_RIGHT, KeyEvent.VK_NUMPAD6};
+			int[] up = {KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_NUMPAD8};
+			int[] down = {KeyEvent.VK_S, KeyEvent.VK_DOWN, KeyEvent.VK_NUMPAD2};
+			int[] bomb = {KeyEvent.VK_SPACE, KeyEvent.VK_ENTER, KeyEvent.VK_NUMPAD5};
 			
 			@Override
 			public void keyPressed(KeyEvent key) {
@@ -218,7 +197,7 @@ public class Bomberman extends JPanel {
 				
 				repaint();				
 				
-				if(gameTime>0)
+				if(gameTime > 0)
 					infoTime.setText("Time : " + gameTime +" ms left");
 				else
 					infoTime.setText("Time : GameOver Bich");
@@ -231,28 +210,21 @@ public class Bomberman extends JPanel {
 	// Ritar om hela panelen
 	@Override
 	public void paintComponent(Graphics g) {
-		
-		// Kallar på superklassens ritfunktion (inte nödvändig egentiligen)
-		super.paintComponents(g);
-
 		g2 = (Graphics2D) g; // "Bättre" objekt för ritning (nyare + mer funktionalitet, inte så viktigt)
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // PIXIEGNOMS FRÅN CORNWALL
 		
 		// Ritar ut grindnätet
 		drawBoard();
 		
-		// TEST TEST skriver ut en bild
-		//g2.drawImage(testImage, null, 0, 0);
-		
 	}	
 	
-	// Ritar ett grindnät
+	// Ritar ut planen
 	public void drawBoard() {
 		int boardSize = 15; // Antal rutor på spelplanen (i x- och y-led)
 		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta är
 		int pos;	// Positionen där den ska börja rita
 			
-		
+		// Ritar ut alla rutor
 		for(int x = 0; x < 15; x++) {
 			for(int y = 0; y < 15; y++) {
 				if(gameBoard.at(x, y) == 2)
@@ -267,16 +239,13 @@ public class Bomberman extends JPanel {
 			}
 		}
 		
+		// Ritar ut alla spelare
 		for(int i = 0; i < players.length; i++) {
-			if(i == 0)
-				g2.setColor(Color.GREEN);
-			else
-				g2.setColor(new Color(255, 105, 180));
-			
+			g2.setColor(players[i].getColor());
 			g2.fillRect(players[i].getX() * boxWidth, players[i].getY() * boxWidth, boxWidth, boxWidth);	
 		}
 				
-		//Draw bombs
+		// Ritar alla bomber
 		g2.setColor(Color.black);
 		for(Bomb bomb : bombs)
 			g2.fillRect(bomb.getX()*boxWidth+18, bomb.getY()*boxWidth+18, 15, 15);
@@ -285,15 +254,11 @@ public class Bomberman extends JPanel {
 		g2.setStroke(new BasicStroke(4));
 		g2.setColor(Color.black);
 		
+		// Ritar alla sträck
 		for(int i = 0; i <= boardSize; i++) {
 			pos = i * boxWidth;
-								
-			// Horizontella sträck
-			//		   x1  y1      x2      y2
+
 			g2.drawLine(0, pos, GAME_WIDTH, pos);
-					
-			// Vertikala sträck
-			//          x1  y1   x2      y2
 			g2.drawLine(pos, 0, pos, GAME_HEIGHT);
 		}	
 				
