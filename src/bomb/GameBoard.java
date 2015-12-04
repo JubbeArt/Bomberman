@@ -2,8 +2,8 @@ package bomb;
 
 public class GameBoard {
 	
-	private static int[][] board = new int[15][15];
-	public enum square {Empty, Stone, Crate};
+	protected static Entity[][] board = new Entity[15][15];
+	
 	
 	// Återställer sprlplanen till grundläget
 	public void resetBoard(){
@@ -11,7 +11,7 @@ public class GameBoard {
 		// Lådor
 		for(int i = 0; i < 15; i++)
 			for(int j = 0; j < 15; j++)
-				board[i][j] = 2;
+				board[i][j] = new Entity(i, j);
 		
 		// Stenar
 		for(int i = 1; i<14; i+=2)
@@ -34,6 +34,7 @@ public class GameBoard {
 
 	}
 	
+	
 	// Retunerar en plats på planen
 	public int at(int x, int y) {
 		return board[x][y];
@@ -42,7 +43,7 @@ public class GameBoard {
 	
 	// Retunerar om en plats på planen stämmer överens med ett inskickat värde
 	// Retunerar false om platsen är utanför planen
-	public boolean checkSquare(int x, int y, int boxValue) {
+	protected boolean checkSquare(int x, int y, int boxValue) {
 		if(x < 0 || x > 14 || y < 0 || y > 14)
 			return false;
 		

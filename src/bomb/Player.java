@@ -9,8 +9,9 @@ public class Player extends Entity{
 	private int health;
 	private int bombLimit;
 	private int bombsUsed; 
-	private Color color;
-	private static Random rand = new Random();
+	
+	private static Random rand = new Random();	
+
 	
 	
 	Player(int x, int y) {
@@ -18,18 +19,19 @@ public class Player extends Entity{
 	}
 	
 	Player(int x, int y, Color c) {
-		super(x, y);
-		power = 1;
+		super(x, y, PLAYER1, c);
+		PLAYER1++;
+		
+		power = 5;
 		health = 1;
 		bombLimit = 1;
 		bombsUsed = 0;
 		
-		color = c;
 	}
 
 	public void moveX(int x) {		
 		if(checkSquare(xPos + x, yPos, 0))
-			xPos += x;	
+			xPos += x;
 	}
 		
 	public void moveY(int y) {		
@@ -40,7 +42,7 @@ public class Player extends Entity{
 	public Color getColor() {
 		return color;
 	}
-	
+
 	public int getPower() {
 		return power;
 	}

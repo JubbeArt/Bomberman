@@ -185,14 +185,19 @@ public class Bomberman extends JPanel {
 				//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
 				while(itBomb.hasNext()) {
 					tmpBomb = itBomb.next();
-					
-					
-					if(tmpBomb.updateBomb(currentTime)) {
-						int owner = tmpBomb.getOwner();
-						players[owner].changeBombsUsed(-1);
-						itBomb.remove();			
-						
+										
+					// Kollar om bomben har exploderat än
+					if(!tmpBomb.hasDetonated()) {
+						if(tmpBomb.updateBomb(currentTime)) {
+							int owner = tmpBomb.getOwner();
+							players[owner].changeBombsUsed(-1);
+						}						
 					}
+					else { // Kollar om vi fortfarande ska skriva ut bomben
+						if(tmpBomb.updatePrintable(currentTime)) {
+							itBomb.remove();			
+						}						
+					}			
 				}	
 				
 				repaint();				
