@@ -35,7 +35,6 @@ public class GameBoard {
 	// Återställer sprlplanen till grundläget
 	public void resetBoard(){
 		
-			
 		// Lådor
 		for(int i = 0; i < 15; i++)
 			for(int j = 0; j < 15; j++)
@@ -59,8 +58,8 @@ public class GameBoard {
 			board[i][0] = new Entity(i, 0);
 			board[i][14] = new Entity(i, 14);
 			
-		}
-
+		}	
+		
 	}	
 		
 	// Retunerar en plats på planen
@@ -94,8 +93,6 @@ public class GameBoard {
 			return false;
 		
 	}
-	
-
-	
+		
 	
 }

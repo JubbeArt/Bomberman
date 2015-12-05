@@ -25,7 +25,8 @@ public class Player extends Entity{
 		isAlive = true;
 		power = 3;
 		bombLimit = 1;
-		bombsUsed = 0;		
+		bombsUsed = 0;	
+		updatePos(xPos, yPos);
 	}
 
 	public void moveX(int x) {		
@@ -44,6 +45,12 @@ public class Player extends Entity{
 		}
 	}	
 
+	@Override
+	public boolean update(long currentTime) {
+		return !isAlive;
+	}
+	
+	
 	public int getPower() {
 		return power;
 	}

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -15,22 +16,21 @@ public class GameGraphics extends JPanel{
 	private int GAME_WIDTH;
 	private int GAME_HEIGHT;
 	
-	private Entity[][] board;	
+	private Entity[][] board;
+	private Set<Bomb> bombs;
 	private Graphics2D g2;
 	
 	public GameGraphics(int width, int height) {
 		GAME_WIDTH = width;
-		GAME_HEIGHT = height;
-		
+		GAME_HEIGHT = height;		
 	}
-	
-		
-	public void drawGame(Entity[][] board) {
-		this.board = board;		
+			
+	public void drawGame(Entity[][] board, Set<Bomb> bombs) {
+		this.board = board;	
+		this.bombs = bombs;
 		repaint();
 	}
-	
-	
+		
 	// Ritar om hela panelen
 	@Override
 	public void paintComponent(Graphics g) {
@@ -43,12 +43,13 @@ public class GameGraphics extends JPanel{
 		for(Entity[] row : board) {
 			for(Entity e : row) {
 				g2.setColor(e.getColor());
-				
-				if(e.getID() == Square.BOMB.getValue())
-					g2.fillRect(e.getX() * boxWidth + 18, e.getY() * boxWidth + 18, 15, 15);
-				else
-					g2.fillRect(e.getX() * boxWidth, e.getY() * boxWidth, boxWidth, boxWidth);	
+				g2.fillRect(e.getX() * boxWidth, e.getY() * boxWidth, boxWidth, boxWidth);	
 			}			
+		}
+		
+		for(Bomb e : bombs) {
+			g2.setColor(e.getColor());
+			g2.fillRect(e.getX() * boxWidth + 18, e.getY() * boxWidth + 18, 15, 15);		
 		}
 		
 		// Sätter storleken på borsten till 4 pixlar

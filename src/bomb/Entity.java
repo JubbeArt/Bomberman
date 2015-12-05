@@ -16,13 +16,11 @@ public class Entity extends GameBoard{
 		xPos = x;
 		yPos = y;
 		ID = id;
-		color = c;
-		updatePos(xPos, yPos);		
+		color = c;		
 	}
 	
 	public void updatePos(int x, int y) {
-		setSquare(x, y, this);
-		
+		setSquare(x, y, this);		
 	}
 	
 	public int getX() {
@@ -49,6 +47,10 @@ public class Entity extends GameBoard{
 	
 	public Color getColor() {
 		return color;
+	}
+	
+	public boolean update(long currentTime) {
+		return false;		
 	}
 	
 }

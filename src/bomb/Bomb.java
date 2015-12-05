@@ -7,9 +7,20 @@ public class Bomb extends Entity {
 	private long startTime;	
 	private long timeToExplode;
 	private int owner;	
-			
-	Bomb(int x, int y, int power, long time, int owner) {
-		super(x, y);
+		
+	
+	private enum Change {add, sub, same};
+	
+	private Change[] up = {Change.same, Change.sub};
+	private Change[] down = {Change.same, Change.add};
+	private Change[] left = {Change.sub, Change.same};
+	private Change[] right = {Change.add, Change.same};
+	
+	private Change[][] directions = {up, down, left, right};
+	
+	
+	Bomb(int x, int y, int power, int owner, long time) {
+		super(x, y, Square.BOMB.getValue(), Square.BOMB.getColor());
 		this.power = power;
 		this.owner = owner;
 		startTime = time;
@@ -19,36 +30,60 @@ public class Bomb extends Entity {
 	}
 	
 	// Exploderar bomben
-	public void explode() {
+	public void explode() {		
 		
-		boolean hasHit[] = new boolean[4]; // clockvise (up,left,down,right)
-					
-		// Loopar igenom mer desto starkare bomben är
-		for(int i = 1; i <= power; i++) {
-			if(checkSquare(xPos, yPos - i, 2) && !hasHit[0]) { // up
-				setSquare(xPos, yPos - i, 0);
-				hasHit[0] = true;
+		int id = get(xPos, yPos).getID();
+		
+		//if(id == Player..)
+		setSquare(xPos, yPos, new Explosion(xPos, yPos, System.currentTimeMillis()));
+		
+		
+		
+		 // Loopar igenom alla håll som bomben kan explodera
+		for(int i = 0; i < directions.length; i++) { 
+			
+			// Loopar igenom hur långt bombmen ska sprängas
+			for(int p = 1; p <= power; p++) {			
+							
+				int[] pos = {xPos, yPos};
+				System.out.println(xPos + ", " + yPos);
+				
+				for(int xy = 0; xy < pos.length; xy++) { // Kolla vad man ska öka/miska för att åt ett håll
+					if(directions[i][xy] == Change.add)
+						pos[xy] += p;
+					else if(directions[i][xy] == Change.sub)
+						pos[xy] -= p;				
+				}
+				
+				if(!checkInBounds(pos[0], pos[1]))
+					break;
+				
+				id = get(pos[0], pos[1]).getID();
+				
+				if(id == Square.STONE.getValue())
+					break;
+				else if(id == Square.CRATE.getValue() || id == Square.EMPTY.getValue()) {
+					setSquare(pos[0], pos[1], new Explosion(pos[0], pos[1], System.currentTimeMillis()));		
+					break;
+				}
+				
 			}
-			if(checkSquare(xPos - i, yPos, 2) && !hasHit[1]) { // left
-				setSquare(xPos - i, yPos, 0);
-				hasHit[1] = true;
-			}	
-			if(checkSquare(xPos, yPos + i, 2) && !hasHit[2]) { // down
-				setSquare(xPos, yPos + i, 0);	
-				hasHit[2] = true;
-			}
-			if(checkSquare(xPos + i, yPos, 2) && !hasHit[3]) { // right
-				setSquare(xPos + i, yPos, 0);
-				hasHit[3] = true;
-			}					
 		}
 		
 		detonated = true;
 
 	}
 	
+	private boolean checkInBounds(int x, int y) {
+		if(x < 0 || x > 14 || y < 0 || y > 14)
+			return false;
+		return true;
+				
+	}
+	
 	// Kollar om det är dags att spränga skiten
-	public boolean updateBomb(long currentTime) {	
+	@Override
+	public boolean update(long currentTime) {	
 		if(currentTime - startTime > timeToExplode) {
 			explode();
 			return true;

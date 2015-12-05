@@ -4,14 +4,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import bomb.GameBoard.Square;
 
 /**
  * Best game ever made... by the best guys ever made
@@ -41,7 +45,7 @@ public class Bomberman {
 	
 	// Objekt för spelet
 	private GameBoard gameBoard;	
-	private Player[] players;	
+	private List<Player> players;	
 	private Set<Bomb> bombs;
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
@@ -73,8 +77,13 @@ public class Bomberman {
 		// Initialisera alla spelobjekt
 		gameBoard = new GameBoard();
 		gameBoard.resetBoard();
-						
-		players = new Player[]{new Player(0, 0), new Player(14, 0)};
+					
+		players = new ArrayList<Player>();
+		players.add(new Player(0, 0));
+		players.add(new Player(14, 0));
+		players.add(new Player(14, 14));
+		
+		
 		bombs = new HashSet<Bomb>();
 	}	
 
@@ -121,20 +130,29 @@ public class Bomberman {
 			
 				int k = key.getKeyCode();
 				
-				for(int i = 0; i < players.length; i++) {				
+				for(int i = 0; i < players.size(); i++) {				
+				
+					if(!players.get(i).isAlive())
+						break;
+					
 					// Input för player1
 					if(k == left[i])
-						players[i].moveX(-1);
+						players.get(i).moveX(-1);
 					else if(k == right[i])
-						players[i].moveX(1);
+						players.get(i).moveX(1);
 					else if(k == up[i])
-						players[i].moveY(-1);
+						players.get(i).moveY(-1);
 					else if(k == down[i])
-						players[i].moveY(1);
+						players.get(i).moveY(1);
 					else if(k == bomb[i]) {
-						if(players[i].getBombsUsed() < players[i].getBombLimit()) {
-							bombs.add(new Bomb(players[i].getX(), players[i].getY(), players[i].getPower(), System.currentTimeMillis(), i));
-							players[i].changeBombsUsed(1);
+						if(players.get(i).getBombsUsed() < players.get(i).getBombLimit()) {
+							bombs.add(new Bomb(	players.get(i).getX(), 
+												players.get(i).getY(), 
+												players.get(i).getPower(), 
+												players.get(i).getID(),
+												System.currentTimeMillis()
+												));
+							players.get(i).changeBombsUsed(1);
 						}
 					}
 				}				
@@ -177,10 +195,11 @@ public class Bomberman {
 				oldTime = currentTime; // Sparar undan tiden
 				gameTime -= diff; // Minskar spelklockan med differensen
 				
-				// Ritar om spelplanen
-				updateGame(currentTime);
+				Entity[][] tmpBoard = gameBoard.getBoard();
 				
-				gameGraphics.drawGame(gameBoard.getBoard());	
+				// Ritar om spelplanen
+				updateGame(tmpBoard, currentTime);				
+				gameGraphics.drawGame(tmpBoard, bombs);	
 				
 				if(gameTime > 0)
 					infoTime.setText("Time : " + gameTime +" ms left");
@@ -193,8 +212,8 @@ public class Bomberman {
 		
 	}
 	
-	public void updateGame(long currentTime) {
-		
+	public void updateGame(Entity[][] board, long currentTime) {
+				
 		Iterator<Bomb> itBomb = bombs.iterator();
 		Bomb tmpBomb;
 		//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
@@ -202,12 +221,26 @@ public class Bomberman {
 			tmpBomb = itBomb.next();
 								
 			// Kollar om bomben har exploderat än
-			if(tmpBomb.updateBomb(currentTime)) {
+			if(tmpBomb.update(currentTime)) {
 					int owner = tmpBomb.getOwner();
-					players[owner].changeBombsUsed(-1);
+					
+					for(int i = 0; i < players.size(); i++) {
+						if(players.get(i).getID() == owner)
+							players.get(i).changeBombsUsed(-1);						
+					}
+									
 					itBomb.remove();							
 			}			
 		}	
+		
+		for(Entity[] row : board) {
+			for(Entity e : row) {
+				if(e.update(currentTime)) // Tar bort explosioner / spelare
+					gameBoard.setSquare(e.getX(), e.getY(), Square.EMPTY.getValue());
+				
+			}
+		}	
+		
 		
 	}
 	
