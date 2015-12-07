@@ -18,7 +18,10 @@ import bomb.GameBoard.Square;
  * Board innehåller själva spelplanen (stenar, lådor, explosioner och tomma platser) medan spelarna och bomberna
  * skickas in för sig. (Detta p.g.a. att spelare och bomber ligger "uppepå" spelplanen)
  * 
- * I drawBoard kallas repaint funktionen som i sin tur kallar på paintComponent-funktione
+ * I drawBoard kallas repaint funktionen som i sin tur kallar på paintComponent-funktionen.
+ * Denna funktioner överlagrar JPanels standard ritning av panelen.
+ * 
+ * Graphics2D objektet används för själva ritandet i panelen.
  * 
  * */
 public class GameGraphics extends JPanel{
@@ -51,19 +54,21 @@ public class GameGraphics extends JPanel{
 	// Ritar om hela panelen
 	@Override
 	public void paintComponent(Graphics g) {
-		g2 = (Graphics2D) g; // "B�ttre" objekt f�r ritning (nyare + mer funktionalitet, inte s� viktigt)
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // PIXIEGNOMS FR�N CORNWALL
+		g2 = (Graphics2D) g; // "Bättre" objekt för ritning (nyare + mer funktionalitet, inte så viktigt)
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // PIXIEGNOMS FRÅN CORNWALL
 			
-		int boardSize = 15; // Antal rutor p� spelplanen (i x- och y-led)
-		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta �r
+		int boardSize = 15; // Antal rutor på spelplanen (i x- och y-led)
+		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta är
 					
+		// Ritar ut varje ruta på spelplanen (t.ex. låder och stenar)
 		for(int x = 0; x < board.length; x++) {
 			for(int y = 0; y < board[x].length; y++) {
 				g2.setColor(Square.values()[board[x][y]].getColor());
 				g2.fillRect(x * boxWidth, y * boxWidth, boxWidth, boxWidth);					
 			}			
 		}
-		
+
+		// Ritar ut spelarna
 		for(Player p : players) {			
 			if(p.isAlive()) {			
 				g2.setColor(p.getColor());
@@ -71,19 +76,20 @@ public class GameGraphics extends JPanel{
 			}
 		}
 		
+		// Ritar ut bomberna
 		for(Bomb b : bombs) {
 			g2.setColor(b.getColor());
 			g2.fillRect(b.getX() * boxWidth + 18, b.getY() * boxWidth + 18, 15, 15);		
 		}
 		
 		
-		// S�tter storleken p� borsten till 4 pixlar
+		// Sätter storleken på borsten till 4 pixlar
 		g2.setStroke(new BasicStroke(4));
 		g2.setColor(Color.black);
 		
-		int pos;	// Positionen d�r den ska b�rja rita
+		int pos;	// Positionen där den ska börja rita
 				
-		// Ritar alla str�ck
+		// Ritar alla sträck
 		for(int i = 0; i <= 15; i++) {
 			pos = i * boxWidth;
 
