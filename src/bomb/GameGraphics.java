@@ -26,6 +26,9 @@ import bomb.GameBoard.Square;
  * */
 public class GameGraphics extends JPanel{
 
+	// Slut klaga eclipse....
+	private static final long serialVersionUID = -1482084293493657149L;
+	
 	// Storleken på panelen
 	private int GAME_WIDTH;
 	private int GAME_HEIGHT;

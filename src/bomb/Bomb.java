@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /*
- * Subklass av Entity. Är en bomb på spelplanen som läggs ut av spelarna
+ * Subklass av Entity. Är en bomb på spelplanen som läggs ut av spelarna.
  * 
  * Objektet vet hur mycket den ska spränga, när den ska sprängas och vem ägaren är.
  * Update-funktionen kollar om bomben ska sprängas.
@@ -25,7 +25,7 @@ public class Bomb extends Entity {
 	private enum Change {add, sub, same};
 	
 	// Vad som krävs för att flytta sig i en riktning
-	// Det första värdet i array en x-värdets förändrning och den andra är y-värdet
+	// Det första värdet i arrayen är x-värdets förändrning och det andra är y-värdet
 	
 	// Till exempel, om man vill komma uppåt så blir x-värdet det samma (same) och y-värdet minskar (sub)
 	private Change[] up = {Change.same, Change.sub};
@@ -49,14 +49,14 @@ public class Bomb extends Entity {
 	// Exploderar bomben och retunerar alla platser som blev explosions-objekt
 	public Set<Explosion> explode() {		
 		
-		// Skapar ett temporär mänga av explosion-objekt som ska retuneras
+		// Skapar en temporär mänga av explosion-objekt som ska retuneras
 		Set<Explosion> tmpSet = new HashSet<Explosion>();
 		
 		// Hämtar den nuvarande tiden
 		long currentTime = System.currentTimeMillis();
 		
 		// Sätter bombens plats till en explosion, detta kommer alltid ske ju.
-		setSquare(xPos, yPos, Square.EXPLOSION.getID()); // Uppdeterar spelplanen
+		setSquare(xPos, yPos, Square.EXPLOSION.getID()); // Uppdaterar spelplanen
 		tmpSet.add(new Explosion(xPos, yPos, currentTime)); // Skapar ett explosions-objekt
 		
 		

@@ -31,7 +31,7 @@ import bomb.GameBoard.Square;
  * ALLT
  * 
  * 
- * Fixa coola utskrifter n�r spelet �r slut
+ * Fixa coola utskrifter när spelet är slut
  * Fixa alternativ att starta nytt spel
  * tiden / end---snurrent
  * spela flera spel
@@ -48,13 +48,12 @@ import bomb.GameBoard.Square;
  * Klassen tar hand om alla swing- samt spelobjekt.
  * 
  * Fönstret skapas i konstruktorn.
- * Resten av objektet skapas i create-funktionerna (createGame och createContainers)
+ * Resten av objekten skapas i create-funktionerna (createGame och createContainers)
  * 
  * Spelet startas när startGame-funktionen kallas på. I den finns en while(true) loop
  * som körs till spelet är slut.
  * 
- * I spelloopen kallas updateGame och drawGame som ser till att spelet
- * blir går som de ska.
+ * I spelloopen kallas updateGame och drawGame som ser till att spelet går på.
  * */
 
 public class Bomberman {
