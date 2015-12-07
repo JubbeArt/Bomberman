@@ -61,7 +61,7 @@ public class GameBoard {
 
 		int empty = Square.EMPTY.getID();
 		
-		// Tomma platser
+		// Tomma platser (alla hörn)
 		for(int i = 0; i < 2; i++) {
 			board[0][i] = empty;
 			board[0][i + 13] = empty;

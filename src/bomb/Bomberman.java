@@ -43,14 +43,14 @@ import bomb.GameBoard.Square;
  * */
 public class Bomberman {
 
-	// Objekt f�r swing
+	// Objekt för swing
 	private JFrame frame;
 	private JPanel windowContainer;
 	
 	private JPanel info;
 	private JLabel infoTime, infoTitle;
 	
-	// Ritobjekt f�r panelen
+	// Ritobjekt för panelen
 	private GameGraphics gameGraphics;
 	
 	// Objekt för spelet

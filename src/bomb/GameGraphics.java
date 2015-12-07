@@ -11,15 +11,28 @@ import java.util.Set;
 import javax.swing.JPanel;
 
 import bomb.GameBoard.Square;
-
+/*
+ * Subklass av swingklassen JPanel. Här ritas hela spelplanen ut. Tokfink ju!
+ * 
+ * Alla objekt som ska ritas ut måste skickas in i drawGame-funktionen.
+ * Board innehåller själva spelplanen (stenar, lådor, explosioner och tomma platser) medan spelarna och bomberna
+ * skickas in för sig. (Detta p.g.a. att spelare och bomber ligger "uppepå" spelplanen)
+ * 
+ * I drawBoard kallas repaint funktionen som i sin tur kallar på paintComponent-funktione
+ * 
+ * */
 public class GameGraphics extends JPanel{
 
+	// Storleken på panelen
 	private int GAME_WIDTH;
 	private int GAME_HEIGHT;
 	
+	// Alla objekt som ska ritas ut
 	private int[][] board;
 	private Set<Bomb> bombs;
 	private List<Player> players;
+
+	// Swing-objekt för utritning
 	private Graphics2D g2;
 	
 	public GameGraphics(int width, int height) {
@@ -27,6 +40,7 @@ public class GameGraphics extends JPanel{
 		GAME_HEIGHT = height;		
 	}
 			
+	// Hämtar alla objekt som ska skrivas ut och kallar på repaint, (som i sin tur kallar på paintComponent).
 	public void drawGame(int[][] board, List<Player> players, Set<Bomb> bombs) {
 		this.board = board;	
 		this.bombs = bombs;
