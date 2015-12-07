@@ -35,6 +35,8 @@ import bomb.GameBoard.Square;
  * tiden / end---snurrent
  * spela flera spel
  * powerups
+ * sounds
+ * music
  * 
  * 
  * */
@@ -206,8 +208,10 @@ public class Bomberman {
 				
 				if(gameTime > 0)
 					infoTime.setText("Time : " + String.format( "%.2f", gameTime / 1000.0) +" s left");
-				else {
+				else if(!gameBoard.isEndgame()) {
+					gameBoard.startEndgame(currentTime);					
 					infoTime.setText("TIME IS RUNNING OUT!!!");
+				} else {
 					gameBoard.updateEndgame(currentTime);
 					
 				}	
@@ -256,8 +260,13 @@ public class Bomberman {
 				p.update();
 			}
 		}
-		//if(playerCount <= 1)
-		//	System.exit(-34434);
+		
+		if(playerCount == 0) {
+			// draw
+		}else if(playerCount == 1) {
+			// someonewon!!
+			// restart game
+		}
 		
 		
 	}

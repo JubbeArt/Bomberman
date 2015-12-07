@@ -6,8 +6,7 @@ public class GameBoard {
 	
 	// Spelplanen
 	private static Entity[][] board = new Entity[15][15];
-			
-	
+		
 	// Hur våra rutor ska se ut, används för att skapa objekt av Entity-klassen
 	public enum Square {EMPTY(0, Color.white), 
 						STONE(1, Color.gray), 
@@ -94,36 +93,42 @@ public class GameBoard {
 			return false;
 		
 	}
-		/*
-
-	public void endgame() {
-		startTimeawdawd = 0;	
-		
-		
+	
+	private int stoneX = 0;
+	private int stoneY = 14;
+	private boolean isEndgame = false;
+	private long startStoneTime;
+	
+	public void startEndgame(long time) {
+		startStoneTime = time;		
+		isEndgame = true;
 	}
-	*/
+	
+	
+	private void addStone() {
+
+		if(stoneX <= 14 && stoneY >= 0) {
+		
+			setSquare(stoneX, stoneY, new Entity(stoneX, stoneY, Square.STONE.getValue(), Square.STONE.getColor()));
+			
+			if(stoneY % 2 == 0 && stoneX == 14)
+				stoneY--;
+			else if(stoneY % 2 == 0)
+				stoneX++;
+			else if(stoneX == 0)
+				stoneY--;
+			else
+				stoneX--;			
+			}
+		}
+	
+	public boolean isEndgame() {
+		return isEndgame;
+	}
 	
 	public void updateEndgame(long currentTime) {
-		
-		int x = 0;
-		int y = 14;
-	
-		while(x != 14 || y != 0){
-
-			setSquare(x, y, new Entity(x, y, Square.STONE.getValue(), Square.STONE.getColor()));
-			
-			if(y % 2 == 0 && x == 14)
-				y--;
-			else if(y % 2 == 0)
-				x++;
-			else if(x == 0)
-				y--;
-			else
-				x--;			
-		} 
-
-		setSquare(14, 0, new Entity(x, y, Square.STONE.getValue(), Square.STONE.getColor()));
-		
+		if((startStoneTime - currentTime) % 5 == 0)
+			addStone();
 	}
 	
 }
