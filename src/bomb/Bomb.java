@@ -2,7 +2,7 @@ package bomb;
 
 public class Bomb extends Entity {
 
-	private int power; // Hur mÃ¥nga rutor bomben kan sprÃ¤nga
+	private int power; // Hur många rutor bomben kan spränga
 	private boolean detonated;
 	private long startTime;	
 	private long timeToExplode;
@@ -33,15 +33,15 @@ public class Bomb extends Entity {
 	public void explode() {		
 		setSquare(xPos, yPos, new Explosion(xPos, yPos, System.currentTimeMillis()));
 			
-		 // Loopar igenom alla hÃ¥ll som bomben kan explodera
+		 // Loopar igenom alla håll som bomben kan explodera
 		for(int i = 0; i < directions.length; i++) { 
 			
-			// Loopar igenom hur lÃ¥ngt bombmen ska sprÃ¤ngas
+			// Loopar igenom hur långt bombmen ska sprängas
 			for(int p = 1; p <= power; p++) {			
 							
 				int[] pos = {xPos, yPos};
 								
-				for(int xy = 0; xy < pos.length; xy++) { // Kolla vad man ska Ã¶ka/miska fÃ¶r att Ã¥t ett hÃ¥ll
+				for(int xy = 0; xy < pos.length; xy++) { // Kolla vad man ska öka/miska för att åt ett håll
 					if(directions[i][xy] == Change.add)
 						pos[xy] += p;
 					else if(directions[i][xy] == Change.sub)
@@ -77,7 +77,7 @@ public class Bomb extends Entity {
 				
 	}
 	
-	// Kollar om det Ã¤r dags att sprÃ¤nga skiten
+	// Kollar om det är dags att spränga skiten
 	@Override
 	public boolean update(long currentTime) {	
 		if(currentTime - startTime > timeToExplode) {

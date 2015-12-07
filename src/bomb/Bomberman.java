@@ -31,7 +31,8 @@ import bomb.GameBoard.Square;
  * ALLT
  * 
  * 
- * game over / wincomdiution
+ * Fixa coola utskrifter när spelet är slut
+ * Fixa alternativ att starta nytt spel
  * tiden / end---snurrent
  * spela flera spel
  * powerups
@@ -42,33 +43,38 @@ import bomb.GameBoard.Square;
  * */
 public class Bomberman {
 
-	// Objekt fÃ¶r swing
+	// Objekt för swing
 	private JFrame frame;
 	private JPanel windowContainer;
 	
 	private JPanel info;
 	private JLabel infoTime, infoTitle;
 	
-	// Ritobjekt fÃ¶r panelen
+	// Ritobjekt för panelen
 	private GameGraphics gameGraphics;
 	
-	// Objekt fÃ¶r spelet
+	// Objekt för spelet
 	private GameBoard gameBoard;	
 	private List<Player> players;	
 	private Set<Bomb> bombs;
 	
-	// Storlekar pÃ¥ fÃ¶nstret och alla containrar (JPanel)
+	//Ctrl-vars
+	private int playersAlive;
+	private int winnerID[] = new int[4];
+	private boolean ongoing = true;
+	
+	// Storlekar på fönstret och alla containrar (JPanel)
 	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 850;
 	private final int GAME_WIDTH = 750, GAME_HEIGHT = 750;
 	private final int INFO_WIDTH = 750, INFO_HEIGHT = 100;
 	
-	// Titlen pÃ¥ spelet sÃ¥klart
-	private String title = "BOMBERMAN!!Â½1!";
+	// Titlen på spelet såklart
+	private String title = "BOMBERMAN!!½1!";
 	
 	public Bomberman() {				
-		frame = new JFrame("Bomberman... Kappa"); 	// SjÃ¤lva fÃ¶nstret
+		frame = new JFrame("Bomberman... Kappa"); 	// Själva fönstret
 		
-		// InstÃ¤llningar fÃ¶r fÃ¶nsteret
+		// Inställningar för fönsteret
 		frame.setResizable(false);
 		frame.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
@@ -98,10 +104,10 @@ public class Bomberman {
 		//Main-container
 		windowContainer = new JPanel();		
 		
-		// BestÃ¤mmer hur containern ska ska visas vÃ¥ra paneler (Y_AXIS = UppifrÃ¥n och nerÃ¥t)
+		// Bestämmer hur containern ska ska visas våra paneler (Y_AXIS = Uppifrån och neråt)
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.Y_AXIS));		
 		
-		info = new JPanel();	// Den Ã¶vere panelen med info om spelet
+		info = new JPanel();	// Den övere panelen med info om spelet
 		info.setPreferredSize(new Dimension(INFO_WIDTH, INFO_HEIGHT));	
 		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
 		
@@ -117,7 +123,7 @@ public class Bomberman {
 		gameGraphics = new GameGraphics(GAME_WIDTH, GAME_HEIGHT);
 		gameGraphics.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));	
 				
-		// LÃ¤gger till info-delen och spelplanen till vÃ¥r main-container
+		// Lägger till info-delen och spelplanen till vår main-container
 		windowContainer.add(info);
 		windowContainer.add(gameGraphics);
 	
@@ -139,7 +145,7 @@ public class Bomberman {
 				
 					if(players.get(i).isAlive()) {
 					
-						// Input fÃ¶r player1
+						// Input för player1
 						if(k == left[i])
 							players.get(i).moveX(-1);
 						else if(k == right[i])
@@ -170,15 +176,15 @@ public class Bomberman {
 			public void keyTyped(KeyEvent key) {}
 		});
 		
-		// RÃ¤tt container fÃ¥r fokus
+		// Rätt container får fokus
 		windowContainer.setFocusable(true);		
 				
-		// LÃ¤gger till containern till fÃ¶nstret 
+		// Lägger till containern till fönstret 
 		frame.add(windowContainer);
 	}
 	
 	public void showWindow() {		
-		// "Packeterar" och visar fÃ¶nstret
+		// "Packeterar" och visar fönstret
 		frame.pack();
 		frame.setVisible(true);
 	}
@@ -189,13 +195,13 @@ public class Bomberman {
 		long currentTime, diff;
 		long oldTime = System.currentTimeMillis();		
 	
-		long gameTime = 2 * 1000;
+		long gameTime = 120 * 1000;
 		
-		while(true) {
+		while(ongoing) {
 			currentTime = System.currentTimeMillis(); // Nuvanrande tiden
-			diff = currentTime - oldTime; // Skillnaden mellan fÃ¶rra sparade tid			
+			diff = currentTime - oldTime; // Skillnaden mellan förra sparade tid			
 				
-			// Det har gÃ¥tt 1000/60 millisekunder sedan senaste sparande
+			// Det har gått 1000/60 millisekunder sedan senaste sparande
 			if(diff > 17) {
 				oldTime = currentTime; // Sparar undan tiden
 				gameTime -= diff; // Minskar spelklockan med differensen
@@ -206,6 +212,7 @@ public class Bomberman {
 				updateGame(tmpBoard, currentTime);				
 				gameGraphics.drawGame(tmpBoard, players, bombs);	
 				
+				//Visa tid+Endgame
 				if(gameTime > 0)
 					infoTime.setText("Time : " + String.format( "%.2f", gameTime / 1000.0) +" s left");
 				else if(!gameBoard.isEndgame()) {
@@ -215,23 +222,39 @@ public class Bomberman {
 					gameBoard.updateEndgame(currentTime);
 					
 				}	
-				//KALLA PÃ… TOKFIN ENDGAME FUNKTION
+				
+				playersAlive = 0;
+				
+				for(Player p : players) {
+					if(p.isAlive()) {
+						winnerID[playersAlive] = p.getID();
+						playersAlive++;
+					}
+				}
+				
+				if(playersAlive == 0) { //Lika
+					ongoing = false;
+				} else if (playersAlive == 1) { //Vi har en vinnare
+					System.out.println("Winner is: Player number " + (winnerID[0]-4) +  "!");
+					ongoing = false;
+				}
+				
 				
 			}
 							
 		}
-		
+		System.out.println("Game has ended: Press *THIS BUTTON* to start a new game.");
 	}
 	
 	public void updateGame(Entity[][] board, long currentTime) {
 				
 		Iterator<Bomb> itBomb = bombs.iterator();
 		Bomb tmpBomb;
-		//GÃ¥r igenom bomberna och kollar om nÃ¥gon detonerat. Isf tar bort bomben och ritar om planen
+		//Går igenom bomberna och kollar om någon detonerat. Isf tar bort bomben och ritar om planen
 		while(itBomb.hasNext())	{
 			tmpBomb = itBomb.next();
 								
-			// Kollar om bomben har exploderat Ã¤n
+			// Kollar om bomben har exploderat än
 			if(tmpBomb.update(currentTime)) {
 					int owner = tmpBomb.getOwner();
 					

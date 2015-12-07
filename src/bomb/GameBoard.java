@@ -7,7 +7,7 @@ public class GameBoard {
 	// Spelplanen
 	private static Entity[][] board = new Entity[15][15];
 		
-	// Hur v√•ra rutor ska se ut, anv√§nds f√∂r att skapa objekt av Entity-klassen
+	// Hur vÂra rutor ska se ut, anv‰nds fˆr att skapa objekt av Entity-klassen
 	public enum Square {EMPTY(0, Color.white), 
 						STONE(1, Color.gray), 
 						CRATE(2, new Color(139, 69, 19)),
@@ -32,10 +32,10 @@ public class GameBoard {
 	
 	} 
 	
-	// √Öterst√§ller sprlplanen till grundl√§get
+	// ≈terst‰ller sprlplanen till grundl‰get
 	public void resetBoard(){
 		
-		// L√•dor
+		// LÂdor
 		for(int i = 0; i < 15; i++)
 			for(int j = 0; j < 15; j++)
 				board[i][j] = new Entity(i, j, Square.CRATE.getValue(), Square.CRATE.getColor());
@@ -62,17 +62,17 @@ public class GameBoard {
 		
 	}	
 		
-	// Retunerar en plats p√• planen
+	// Retunerar en plats pÂ planen
 	public Entity get(int x, int y) {
 		return board[x][y];		
 	}
 	
-	// S√§tter en ruta p√• spelplanen till den entity som skickas in
+	// S‰tter en ruta pÂ spelplanen till den entity som skickas in
 	protected void setSquare(int x, int y, Entity e){
 		board[x][y] = e;
 	}
 	
-	// S√§tter en ruta p√• spelplanen till en nya entity
+	// S‰tter en ruta pÂ spelplanen till en nya entity
 	protected void setSquare(int x, int y, int ID) {
 		board[x][y] = new Entity(x, y, ID, Square.values()[ID].getColor());		
 	}
@@ -81,8 +81,8 @@ public class GameBoard {
 		return board;
 	}
 	
-	// Retunerar om en plats p√• planen st√§mmer √∂verens med ett inskickat v√§rde
-	// Retunerar false om platsen √§r utanf√∂r planen
+	// Retunerar om en plats pÂ planen st‰mmer ˆverens med ett inskickat v‰rde
+	// Retunerar false om platsen ‰r utanfˆr planen
 	protected boolean checkSquare(int x, int y, int squareID) {
 		if(x < 0 || x > 14 || y < 0 || y > 14)
 			return false;

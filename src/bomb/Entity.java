@@ -2,7 +2,7 @@ package bomb;
 
 import java.awt.Color;
 
-// Abrstakt klass fÃ¶r alla objekt pÃ¥ spelplanen
+// Abrstakt klass för alla objekt på spelplanen
 public class Entity extends GameBoard {
 		
 	protected int xPos, yPos, ID;

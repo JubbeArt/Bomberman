@@ -6,7 +6,7 @@ import java.util.Random;
 public class Player extends Entity{
 	
 	private int hitPoints;
-	private int power; // Hur kraftfulla spelarens bomber √§r
+	private int power; // Hur kraftfulla spelarens bomber ‰r
 	private int bombLimit;
 	private int bombsUsed; 
 	private static int playerID = 5;
@@ -38,7 +38,7 @@ public class Player extends Entity{
 			yPos += y;		
 	}
 	
-	// Updeterar spelaren, inv√§rdet anv√§nds ej, anv√§nds i bomb/explosion
+	// Updeterar spelaren, inv‰rdet anv‰nds ej, anv‰nds i bomb/explosion
 	public boolean update() {
 	
 		int id = get(xPos, yPos).getID();

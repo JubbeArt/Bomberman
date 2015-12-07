@@ -37,11 +37,11 @@ public class GameGraphics extends JPanel{
 	// Ritar om hela panelen
 	@Override
 	public void paintComponent(Graphics g) {
-		g2 = (Graphics2D) g; // "BÃ¤ttre" objekt fÃ¶r ritning (nyare + mer funktionalitet, inte sÃ¥ viktigt)
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // PIXIEGNOMS FRÃ…N CORNWALL
+		g2 = (Graphics2D) g; // "Bättre" objekt för ritning (nyare + mer funktionalitet, inte så viktigt)
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // PIXIEGNOMS FRÅN CORNWALL
 			
-		int boardSize = 15; // Antal rutor pÃ¥ spelplanen (i x- och y-led)
-		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta Ã¤r
+		int boardSize = 15; // Antal rutor på spelplanen (i x- och y-led)
+		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta är
 			
 		for(Entity[] row : board) {
 			for(Entity e : row) {
@@ -62,13 +62,13 @@ public class GameGraphics extends JPanel{
 			g2.fillRect(b.getX() * boxWidth + 18, b.getY() * boxWidth + 18, 15, 15);		
 		}
 		
-		// SÃ¤tter storleken pÃ¥ borsten till 4 pixlar
+		// Sätter storleken på borsten till 4 pixlar
 		g2.setStroke(new BasicStroke(4));
 		g2.setColor(Color.black);
 		
-		int pos;	// Positionen dÃ¤r den ska bÃ¶rja rita
+		int pos;	// Positionen där den ska börja rita
 				
-		// Ritar alla strÃ¤ck
+		// Ritar alla sträck
 		for(int i = 0; i <= 15; i++) {
 			pos = i * boxWidth;
 
