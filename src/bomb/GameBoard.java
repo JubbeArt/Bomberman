@@ -1,13 +1,27 @@
 package bomb;
 
 import java.awt.Color;
-
+/*
+ * Huvudklass för spelplanen och alla dess rutor.
+ * 
+ * Har getter och setters för rutorna.
+ * Mallen för hur rutorna ska se ut finns i en enumeration.
+ * Hanterar också "stenormen" som kommer när spelet börjar närma sitt slut.
+ * 
+ */
 public class GameBoard {
 	
 	// Spelplanen
 	private static int[][] board = new int[15][15];
 		
-	// Hur våra rutor ska se ut, används för att skapa objekt av Entity-klassen
+	// Variabler för slutet på ett spel, då planen sakta görs till STEN!
+	private int stoneX = 0;
+	private int stoneY = 14;
+	private boolean isEndgame = false;
+	private long startStoneTime;
+	
+	
+	// Mall för hur våra rutor ska se ut
 	public enum Square {EMPTY(0, Color.white), 
 						STONE(1, Color.gray), 
 						CRATE(2, new Color(139, 69, 19)),
@@ -77,36 +91,41 @@ public class GameBoard {
 		return board;
 	}
 	
-	// Retunerar om en plats på planen stämmer överens med ett inskickat värde
-	// Retunerar false om platsen är utanför planen
-	protected boolean checkSquare(int x, int y, int id) {
+	// Kommer om en punkt är inom våran spelplan
+	protected boolean checkInBounds(int x, int y) {
 		if(x < 0 || x > 14 || y < 0 || y > 14)
 			return false;
-		
-		if(board[x][y] == id)
-			return true;
-		else
-			return false;
-		
+		return true;
 	}
 	
-	private int stoneX = 0;
-	private int stoneY = 14;
-	private boolean isEndgame = false;
-	private long startStoneTime;
+	// Retunerar sant om det inskickade id stämmer överrens med platsens id
+	protected boolean checkSquare(int x, int y, int id) {
+		return board[x][y] == id;		
+	}
 	
+
+	// Börjar slutet av spelet då rutorna börjar förvandlas till stenar...
 	public void startEndgame(long time) {
 		startStoneTime = time;		
 		isEndgame = true;
 	}
 	
 	
+	// Lägger till en sten
 	private void addStone() {
 
 		if(stoneX <= 14 && stoneY >= 0) {
 		
-			setSquare(stoneX, stoneY, Square.STONE.getID());
+			// Sätter nuvarande plats till en sten
+			board[stoneX][stoneY] = Square.STONE.getID();
 			
+			// Tokfin algoritm för att ta fram vägen som den här "stenormen" tar
+			// Lite sammanfattat så börjar den på plats (0, 14), vänstra nedre hörs alltså
+			
+			// Då y-värdet är jämt ska den gå från vänster till höger (till ruta 14)
+			// Om y-värder är ojämt går den från 14 till 0
+			
+			// Om x kommer till 0 eller 14 så ska y-värdet alltid minska
 			if(stoneY % 2 == 0 && stoneX == 14)
 				stoneY--;
 			else if(stoneY % 2 == 0)
@@ -118,12 +137,14 @@ public class GameBoard {
 			}
 		}
 	
+	// Retunerar om slutdelen av spelat har börjat
 	public boolean isEndgame() {
 		return isEndgame;
 	}
 	
+	// Kollar om den ska lägga till en till sten
 	public void updateEndgame(long currentTime) {
-		if((startStoneTime - currentTime) % 5 == 0)
+		if((startStoneTime - currentTime) % 50 == 0)
 			addStone();
 	}
 	
