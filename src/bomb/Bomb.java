@@ -1,8 +1,12 @@
 package bomb;
 
+import java.util.HashSet;
+import java.util.Set;
+
+
 public class Bomb extends Entity {
 
-	private int power; // Hur många rutor bomben kan spränga
+	private int power; // Hur mÃ¥nga rutor bomben kan sprÃ¤nga
 	private boolean detonated;
 	private long startTime;	
 	private long timeToExplode;
@@ -20,7 +24,7 @@ public class Bomb extends Entity {
 	
 	
 	Bomb(int x, int y, int power, int owner, long time) {
-		super(x, y, Square.BOMB.getValue(), Square.BOMB.getColor());
+		super(x, y, Square.BOMB.getID());
 		this.power = power;
 		this.owner = owner;
 		startTime = time;
@@ -30,44 +34,49 @@ public class Bomb extends Entity {
 	}
 	
 	// Exploderar bomben
-	public void explode() {		
-		setSquare(xPos, yPos, new Explosion(xPos, yPos, System.currentTimeMillis()));
-			
-		 // Loopar igenom alla håll som bomben kan explodera
+	public Set<Explosion> explode() {		
+		
+		Set<Explosion> tmpSet = new HashSet<Explosion>();
+		long currentTime = System.currentTimeMillis();
+		
+		setSquare(xPos, yPos, Square.EXPLOSION.getID());
+		tmpSet.add(new Explosion(xPos, yPos, currentTime));
+		
+		
+		 // Loopar igenom alla hÃ¥ll som bomben kan explodera
 		for(int i = 0; i < directions.length; i++) { 
 			
-			// Loopar igenom hur långt bombmen ska sprängas
+			// Loopar igenom hur lÃ¥ngt bombmen ska sprÃ¤ngas
 			for(int p = 1; p <= power; p++) {			
 							
 				int[] pos = {xPos, yPos};
 								
-				for(int xy = 0; xy < pos.length; xy++) { // Kolla vad man ska öka/miska för att åt ett håll
+				for(int xy = 0; xy < pos.length; xy++) { // Kolla vad man ska Ã¶ka/miska fÃ¶r att Ã¥t ett hÃ¥ll
 					if(directions[i][xy] == Change.add)
 						pos[xy] += p;
 					else if(directions[i][xy] == Change.sub)
 						pos[xy] -= p;				
 				}
 				
-				System.out.println("(" + pos[0] + ", "+ pos[1] + "=");
-				
 				if(!checkInBounds(pos[0], pos[1]))
 					break;
 				
-				int id = get(pos[0], pos[1]).getID();
-				
-				if(id == Square.STONE.getValue())
-					break;
-				else if(id == Square.CRATE.getValue()) {
-					setSquare(pos[0], pos[1], new Explosion(pos[0], pos[1], System.currentTimeMillis()));
-					break;	
+				int id = get(pos[0], pos[1]);
+								
+				if(id == Square.CRATE.getID() || id == Square.EMPTY.getID()) {
+					setSquare(pos[0], pos[1], Square.EXPLOSION.getID());
+					tmpSet.add(new Explosion(pos[0], pos[1], currentTime));
 				}
-				else if(id == Square.EMPTY.getValue())
-					setSquare(pos[0], pos[1], new Explosion(pos[0], pos[1], System.currentTimeMillis()));	
+				
+				if(id == Square.STONE.getID() || id == Square.CRATE.getID())
+					break;				
 			}
 		}
 		
 		detonated = true;
 
+		return tmpSet;
+		
 	}
 	
 	private boolean checkInBounds(int x, int y) {
@@ -77,13 +86,10 @@ public class Bomb extends Entity {
 				
 	}
 	
-	// Kollar om det är dags att spränga skiten
-	@Override
+	// Kollar om det Ã¤r dags att sprÃ¤nga skiten
 	public boolean update(long currentTime) {	
-		if(currentTime - startTime > timeToExplode) {
-			explode();
+		if(currentTime - startTime > timeToExplode)
 			return true;
-		}
 		return false;		
 	}
 	

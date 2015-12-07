@@ -17,7 +17,7 @@ public class GameGraphics extends JPanel{
 	private int GAME_WIDTH;
 	private int GAME_HEIGHT;
 	
-	private Entity[][] board;
+	private int[][] board;
 	private Set<Bomb> bombs;
 	private List<Player> players;
 	private Graphics2D g2;
@@ -27,7 +27,7 @@ public class GameGraphics extends JPanel{
 		GAME_HEIGHT = height;		
 	}
 			
-	public void drawGame(Entity[][] board, List<Player> players, Set<Bomb> bombs) {
+	public void drawGame(int[][] board, List<Player> players, Set<Bomb> bombs) {
 		this.board = board;	
 		this.bombs = bombs;
 		this.players = players;
@@ -37,19 +37,19 @@ public class GameGraphics extends JPanel{
 	// Ritar om hela panelen
 	@Override
 	public void paintComponent(Graphics g) {
-		g2 = (Graphics2D) g; // "Bättre" objekt för ritning (nyare + mer funktionalitet, inte så viktigt)
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // PIXIEGNOMS FRÅN CORNWALL
+		g2 = (Graphics2D) g; // "Bï¿½ttre" objekt fï¿½r ritning (nyare + mer funktionalitet, inte sï¿½ viktigt)
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // PIXIEGNOMS FRï¿½N CORNWALL
 			
-		int boardSize = 15; // Antal rutor på spelplanen (i x- och y-led)
-		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta är
-			
-		for(Entity[] row : board) { //Ger error, kallas 2 ggr innan Entity[] har skapats..
-			for(Entity e : row) {
-				g2.setColor(e.getColor());
-				g2.fillRect(e.getX() * boxWidth, e.getY() * boxWidth, boxWidth, boxWidth);	
+		int boardSize = 15; // Antal rutor pï¿½ spelplanen (i x- och y-led)
+		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta ï¿½r
+					
+		for(int x = 0; x < board.length; x++) {
+			for(int y = 0; y < board[x].length; y++) {
+				g2.setColor(Square.values()[board[x][y]].getColor());
+				g2.fillRect(x * boxWidth, y * boxWidth, boxWidth, boxWidth);					
 			}			
 		}
-	
+		
 		for(Player p : players) {			
 			if(p.isAlive()) {			
 				g2.setColor(p.getColor());
@@ -62,13 +62,14 @@ public class GameGraphics extends JPanel{
 			g2.fillRect(b.getX() * boxWidth + 18, b.getY() * boxWidth + 18, 15, 15);		
 		}
 		
-		// Sätter storleken på borsten till 4 pixlar
+		
+		// Sï¿½tter storleken pï¿½ borsten till 4 pixlar
 		g2.setStroke(new BasicStroke(4));
 		g2.setColor(Color.black);
 		
-		int pos;	// Positionen där den ska börja rita
+		int pos;	// Positionen dï¿½r den ska bï¿½rja rita
 				
-		// Ritar alla sträck
+		// Ritar alla strï¿½ck
 		for(int i = 0; i <= 15; i++) {
 			pos = i * boxWidth;
 

@@ -3,10 +3,11 @@ package bomb;
 import java.awt.Color;
 import java.util.Random;
 
-public class Player extends Entity{
+
+public class Player extends Entity {
 	
 	private int hitPoints;
-	private int power; // Hur kraftfulla spelarens bomber är
+	private int power; // Hur kraftfulla spelarens bomber Ã¤r
 	private int bombLimit;
 	private int bombsUsed; 
 	private static int playerID = 5;
@@ -28,29 +29,28 @@ public class Player extends Entity{
 		hitPoints = 1;
 	}
 
-	public void moveX(int x) {		
-		if(checkSquare(xPos + x, yPos, 0))
+	public void moveX(int x) {	
+			
+		if(checkSquare(xPos + x, yPos, Square.EMPTY.getID()) || checkSquare(xPos + x, yPos, Square.EXPLOSION.getID()))
 			xPos += x;			
 	}
 		
 	public void moveY(int y) {	
-		if(checkSquare(xPos, yPos+y, Square.EMPTY.getValue()) || checkSquare(xPos, yPos+y, Square.EXPLOSION.getValue()) ) 
-			yPos += y;		
+		if(checkSquare(xPos, yPos + y, Square.EMPTY.getID()) || checkSquare(xPos, yPos + y, Square.EXPLOSION.getID())) 
+			yPos += y;	
+		
 	}
 	
-	// Updeterar spelaren, invärdet används ej, används i bomb/explosion
+	// Updeterar spelaren
 	public boolean update() {
 	
-		int id = get(xPos, yPos).getID();
+		int id = get(xPos, yPos);
 		
-		if(id == Square.EXPLOSION.getValue() || id == Square.STONE.getValue()) {
+		if(id == Square.EXPLOSION.getID() || id == Square.STONE.getID())
 			hitPoints--;
-			
-			System.out.println(hitPoints + " DMawqqsSDWAWDAWDAWDAWDAWDAWDAWDWA SILVER5....... GG!");
-		}
 		
-
-		return !isAlive();
+		
+		return isAlive();
 	}
 	
 	public int getPower() {

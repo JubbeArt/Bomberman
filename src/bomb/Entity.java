@@ -2,14 +2,20 @@ package bomb;
 
 import java.awt.Color;
 
-// Abrstakt klass för alla objekt på spelplanen
+
+// Abrstakt klass fÃ¶r alla objekt pÃ¥ spelplanen
 public class Entity extends GameBoard {
 		
-	protected int xPos, yPos, ID;
+	protected int xPos, yPos;
+	private int ID;
 	private Color color;
 	
 	Entity(int x, int y) {		
 		this(x, y, 0, Color.white);		
+	}
+	
+	Entity(int x, int y, int id) {
+		this(x, y, id, Square.values()[id].getColor());
 	}
 		
 	Entity(int x, int y, int id, Color c) {
@@ -20,7 +26,7 @@ public class Entity extends GameBoard {
 	}
 	
 	public void updatePos(int x, int y) {
-		setSquare(x, y, this);		
+		setSquare(x, y, ID);		
 	}
 	
 	public int getX() {
@@ -48,9 +54,5 @@ public class Entity extends GameBoard {
 	public Color getColor() {
 		return color;
 	}
-	
-	public boolean update(long currentTime) {
-		return false;		
-	}
-	
+		
 }
