@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Player extends Entity{
 	
-	private boolean isAlive;
+	private int hitPoints;
 	private int power; // Hur kraftfulla spelarens bomber är
 	private int bombLimit;
 	private int bombsUsed; 
@@ -22,47 +22,47 @@ public class Player extends Entity{
 		
 		playerID++;
 			
-		isAlive = true;
-		power = 3;
+		power = 10;
 		bombLimit = 1;
 		bombsUsed = 0;	
-		updatePos(xPos, yPos);
+		hitPoints = 1;
 	}
 
 	public void moveX(int x) {		
-		if(checkSquare(xPos + x, yPos, 0)) {
-			setSquare(xPos, yPos, 0); // Sätter gamla rutan till en tom
+		if(checkSquare(xPos + x, yPos, 0))
 			xPos += x;			
-			updatePos(xPos, yPos); // Flyttar spelaren till nya rutan
-		}
 	}
 		
-	public void moveY(int y) {		
-		if(checkSquare(xPos, yPos+y, 0)) {
-			setSquare(xPos, yPos, 0);
+	public void moveY(int y) {	
+		if(checkSquare(xPos, yPos+y, Square.EMPTY.getValue()) || checkSquare(xPos, yPos+y, Square.EXPLOSION.getValue()) ) 
 			yPos += y;		
-			updatePos(xPos, yPos);
-		}
-	}	
-
-	@Override
-	public boolean update(long currentTime) {
-		return !isAlive;
 	}
 	
+	// Updeterar spelaren, invärdet används ej, används i bomb/explosion
+	public boolean update() {
+	
+		int id = get(xPos, yPos).getID();
+		
+		if(id == Square.EXPLOSION.getValue() || id == Square.STONE.getValue()) {
+			hitPoints--;
+			
+			System.out.println(hitPoints + " DMawqqsSDWAWDAWDAWDAWDAWDAWDAWDWA SILVER5....... GG!");
+		}
+		
+
+		return !isAlive();
+	}
 	
 	public int getPower() {
 		return power;
 	}
 	
 	public boolean isAlive() {
-		return isAlive;
+		if(hitPoints > 0)
+			return true;
+		return false;
 	}
 	
-	public void setAlive(boolean a) {
-		isAlive = a;
-	}
-		
 	public void changeBombLimit(int b) {
 		bombLimit += b;
 	}

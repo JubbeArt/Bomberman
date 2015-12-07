@@ -25,20 +25,14 @@ public class Bomb extends Entity {
 		this.owner = owner;
 		startTime = time;
 				
-		timeToExplode = 1000;
+		timeToExplode = 1300;
 		detonated = false;
 	}
 	
 	// Exploderar bomben
 	public void explode() {		
-		
-		int id = get(xPos, yPos).getID();
-		
-		//if(id == Player..)
 		setSquare(xPos, yPos, new Explosion(xPos, yPos, System.currentTimeMillis()));
-		
-		
-		
+			
 		 // Loopar igenom alla håll som bomben kan explodera
 		for(int i = 0; i < directions.length; i++) { 
 			
@@ -46,8 +40,7 @@ public class Bomb extends Entity {
 			for(int p = 1; p <= power; p++) {			
 							
 				int[] pos = {xPos, yPos};
-				System.out.println(xPos + ", " + yPos);
-				
+								
 				for(int xy = 0; xy < pos.length; xy++) { // Kolla vad man ska öka/miska för att åt ett håll
 					if(directions[i][xy] == Change.add)
 						pos[xy] += p;
@@ -55,18 +48,21 @@ public class Bomb extends Entity {
 						pos[xy] -= p;				
 				}
 				
+				System.out.println("(" + pos[0] + ", "+ pos[1] + "=");
+				
 				if(!checkInBounds(pos[0], pos[1]))
 					break;
 				
-				id = get(pos[0], pos[1]).getID();
+				int id = get(pos[0], pos[1]).getID();
 				
 				if(id == Square.STONE.getValue())
 					break;
-				else if(id == Square.CRATE.getValue() || id == Square.EMPTY.getValue()) {
-					setSquare(pos[0], pos[1], new Explosion(pos[0], pos[1], System.currentTimeMillis()));		
-					break;
+				else if(id == Square.CRATE.getValue()) {
+					setSquare(pos[0], pos[1], new Explosion(pos[0], pos[1], System.currentTimeMillis()));
+					break;	
 				}
-				
+				else if(id == Square.EMPTY.getValue())
+					setSquare(pos[0], pos[1], new Explosion(pos[0], pos[1], System.currentTimeMillis()));	
 			}
 		}
 		

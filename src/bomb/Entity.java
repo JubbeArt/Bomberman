@@ -3,7 +3,7 @@ package bomb;
 import java.awt.Color;
 
 // Abrstakt klass för alla objekt på spelplanen
-public class Entity extends GameBoard{
+public class Entity extends GameBoard {
 		
 	protected int xPos, yPos, ID;
 	private Color color;

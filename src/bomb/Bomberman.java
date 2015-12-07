@@ -30,6 +30,13 @@ import bomb.GameBoard.Square;
  * 
  * ALLT
  * 
+ * 
+ * game over / wincomdiution
+ * tiden / end---snurrent
+ * spela flera spel
+ * powerups
+ * 
+ * 
  * */
 public class Bomberman {
 
@@ -81,8 +88,6 @@ public class Bomberman {
 		players = new ArrayList<Player>();
 		players.add(new Player(0, 0));
 		players.add(new Player(14, 0));
-		players.add(new Player(14, 14));
-		
 		
 		bombs = new HashSet<Bomb>();
 	}	
@@ -101,8 +106,7 @@ public class Bomberman {
 		infoTitle = new JLabel("<html><h1>" + title + "</h1></html>");
 		infoTitle.setHorizontalAlignment(JLabel.CENTER);
 		infoTitle.setForeground(new Color(0, 0, 130));
-		
-		
+				
 		infoTime = new JLabel("Time : 60 sec left");
 		
 		info.add(infoTitle);
@@ -110,8 +114,7 @@ public class Bomberman {
 		
 		gameGraphics = new GameGraphics(GAME_WIDTH, GAME_HEIGHT);
 		gameGraphics.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));	
-		
-		
+				
 		// Lägger till info-delen och spelplanen till vår main-container
 		windowContainer.add(info);
 		windowContainer.add(gameGraphics);
@@ -119,11 +122,11 @@ public class Bomberman {
 		// Keyboard-input
 		windowContainer.addKeyListener(new KeyListener() {
 				
-			int[] left  = {KeyEvent.VK_A,		KeyEvent.VK_LEFT, 	KeyEvent.VK_NUMPAD4};
-			int[] right = {KeyEvent.VK_D, 		KeyEvent.VK_RIGHT,	KeyEvent.VK_NUMPAD6};
-			int[] up    = {KeyEvent.VK_W, 		KeyEvent.VK_UP,		KeyEvent.VK_NUMPAD8};
-			int[] down  = {KeyEvent.VK_S, 		KeyEvent.VK_DOWN,	KeyEvent.VK_NUMPAD2};
-			int[] bomb  = {KeyEvent.VK_SPACE,	KeyEvent.VK_ENTER,	KeyEvent.VK_NUMPAD5};
+			int[] left  = {KeyEvent.VK_A,		KeyEvent.VK_LEFT, 	KeyEvent.VK_NUMPAD4, KeyEvent.VK_J};
+			int[] right = {KeyEvent.VK_D, 		KeyEvent.VK_RIGHT,	KeyEvent.VK_NUMPAD6, KeyEvent.VK_L};
+			int[] up    = {KeyEvent.VK_W, 		KeyEvent.VK_UP,		KeyEvent.VK_NUMPAD8, KeyEvent.VK_I};
+			int[] down  = {KeyEvent.VK_S, 		KeyEvent.VK_DOWN,	KeyEvent.VK_NUMPAD2, KeyEvent.VK_K};
+			int[] bomb  = {KeyEvent.VK_CONTROL,	KeyEvent.VK_ENTER,	KeyEvent.VK_NUMPAD5, KeyEvent.VK_SPACE};
 			
 			@Override
 			public void keyPressed(KeyEvent key) {
@@ -132,27 +135,27 @@ public class Bomberman {
 				
 				for(int i = 0; i < players.size(); i++) {				
 				
-					if(!players.get(i).isAlive())
-						break;
+					if(players.get(i).isAlive()) {
 					
-					// Input för player1
-					if(k == left[i])
-						players.get(i).moveX(-1);
-					else if(k == right[i])
-						players.get(i).moveX(1);
-					else if(k == up[i])
-						players.get(i).moveY(-1);
-					else if(k == down[i])
-						players.get(i).moveY(1);
-					else if(k == bomb[i]) {
-						if(players.get(i).getBombsUsed() < players.get(i).getBombLimit()) {
-							bombs.add(new Bomb(	players.get(i).getX(), 
-												players.get(i).getY(), 
-												players.get(i).getPower(), 
-												players.get(i).getID(),
-												System.currentTimeMillis()
-												));
-							players.get(i).changeBombsUsed(1);
+						// Input för player1
+						if(k == left[i])
+							players.get(i).moveX(-1);
+						else if(k == right[i])
+							players.get(i).moveX(1);
+						else if(k == up[i])
+							players.get(i).moveY(-1);
+						else if(k == down[i])
+							players.get(i).moveY(1);
+						else if(k == bomb[i]) {
+							if(players.get(i).getBombsUsed() < players.get(i).getBombLimit()) {
+								bombs.add(new Bomb(	players.get(i).getX(), 
+													players.get(i).getY(), 
+													players.get(i).getPower(), 
+													players.get(i).getID(),
+													System.currentTimeMillis()
+													));
+								players.get(i).changeBombsUsed(1);
+							}
 						}
 					}
 				}				
@@ -184,7 +187,7 @@ public class Bomberman {
 		long currentTime, diff;
 		long oldTime = System.currentTimeMillis();		
 	
-		long gameTime = 60 * 1000;
+		long gameTime = 2 * 1000;
 		
 		while(true) {
 			currentTime = System.currentTimeMillis(); // Nuvanrande tiden
@@ -199,12 +202,16 @@ public class Bomberman {
 				
 				// Ritar om spelplanen
 				updateGame(tmpBoard, currentTime);				
-				gameGraphics.drawGame(tmpBoard, bombs);	
+				gameGraphics.drawGame(tmpBoard, players, bombs);	
 				
 				if(gameTime > 0)
-					infoTime.setText("Time : " + gameTime +" ms left");
-				else
-					infoTime.setText("Time : GameOver Bich");
+					infoTime.setText("Time : " + String.format( "%.2f", gameTime / 1000.0) +" s left");
+				else {
+					infoTime.setText("TIME IS RUNNING OUT!!!");
+					gameBoard.updateEndgame(currentTime);
+					
+				}	
+				//KALLA PÅ TOKFIN ENDGAME FUNKTION
 				
 			}
 							
@@ -240,6 +247,17 @@ public class Bomberman {
 				
 			}
 		}	
+		
+		int playerCount = 0;
+		
+		for(Player p : players) {
+			if(p.isAlive()) {
+				playerCount++;
+				p.update();
+			}
+		}
+		//if(playerCount <= 1)
+		//	System.exit(-34434);
 		
 		
 	}
