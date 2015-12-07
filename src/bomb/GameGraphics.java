@@ -43,7 +43,7 @@ public class GameGraphics extends JPanel{
 		int boardSize = 15; // Antal rutor på spelplanen (i x- och y-led)
 		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta är
 			
-		for(Entity[] row : board) {
+		for(Entity[] row : board) { //Ger error, kallas 2 ggr innan Entity[] har skapats..
 			for(Entity e : row) {
 				g2.setColor(e.getColor());
 				g2.fillRect(e.getX() * boxWidth, e.getY() * boxWidth, boxWidth, boxWidth);	

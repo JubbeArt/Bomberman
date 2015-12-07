@@ -222,26 +222,7 @@ public class Bomberman {
 					gameBoard.updateEndgame(currentTime);
 					
 				}	
-				
-				playersAlive = 0;
-				
-				for(Player p : players) {
-					if(p.isAlive()) {
-						winnerID[playersAlive] = p.getID();
-						playersAlive++;
-					}
-				}
-				
-				if(playersAlive == 0) { //Lika
-					ongoing = false;
-				} else if (playersAlive == 1) { //Vi har en vinnare
-					System.out.println("Winner is: Player number " + (winnerID[0]-4) +  "!");
-					ongoing = false;
-				}
-				
-				
-			}
-							
+			}				
 		}
 		System.out.println("Game has ended: Press *THIS BUTTON* to start a new game.");
 	}
@@ -273,24 +254,24 @@ public class Bomberman {
 					gameBoard.setSquare(e.getX(), e.getY(), Square.EMPTY.getValue());
 				
 			}
-		}	
+		}
 		
-		int playerCount = 0;
+		playersAlive = 0;
 		
 		for(Player p : players) {
 			if(p.isAlive()) {
-				playerCount++;
 				p.update();
+				winnerID[playersAlive] = p.getID();
+				playersAlive++;
 			}
 		}
 		
-		if(playerCount == 0) {
-			// draw
-		}else if(playerCount == 1) {
-			// someonewon!!
-			// restart game
+		if(playersAlive == 0) { //Lika
+			ongoing = false;
+		} else if (playersAlive == 1) { //Vi har en vinnare
+			System.out.println("Winner is: Player number " + (winnerID[0]-4) +  "!");
+			ongoing = false;
 		}
-		
 		
 	}
 	
