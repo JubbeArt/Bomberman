@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,9 +36,9 @@ public class GameGraphics extends JPanel{
 	private int GAME_HEIGHT;
 	
 	// Alla objekt som ska ritas ut
-	private int[][] board;
-	private Set<Bomb> bombs;
-	private List<Player> players;
+	private int[][] board = new int[15][15];
+	private Set<Bomb> bombs = new HashSet<Bomb>();
+	private List<Player> players = new ArrayList<Player>();
 
 	// Swing-objekt för utritning
 	private Graphics2D g2;
