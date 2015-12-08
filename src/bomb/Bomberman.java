@@ -2,6 +2,7 @@ package bomb;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -21,6 +22,14 @@ import bomb.GameBoard.Square;
  * Best game ever made... by the best guys ever made
  * REKT CHINA #HILLARY_FOR_PRESIDEN_KAPPA_NO_KAPPA
  * 
+ * My Grandfather smoked his whole life. 
+ * I was about 10 years old when my mother said to him, 
+ * "If you ever want to see your grandchildren graduate, you have to stop immediately." 
+ * Tears welled up in his eyes when he realized what exactly was at stake. He gave it up immediately. 
+ * Three years later he died of lung cancer. It was really sad and destroyed me. 
+ * My mother said to me- "Don't ever smoke. Please don't put your family through what your Grandfather put us through." 
+ * I agreed. At 28, I have never touched a cigarette. 
+ * I must say, I feel a very slight sense of regret for never having done it, because your post gave me game anyway.
  * 
  * @author Baron Jesper Wrang (jeswr740) and Lord Samuel von Johansson (samjo788)
  *
@@ -33,11 +42,8 @@ import bomb.GameBoard.Square;
  * 
  * Fixa coola utskrifter när spelet är slut
  * Fixa alternativ att starta nytt spel
- * tiden / end---snurrent
  * spela flera spel
  * powerups
- * sounds
- * music
  * 
  * 
  * */
@@ -78,7 +84,9 @@ public class Bomberman {
 	//Kontroll variabler för spelets gång
 	private int playersAlive;
 	private int winnerID[] = new int[4];
-	private boolean ongoing = true;
+	
+	private static boolean playAgain = true;
+	
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
 	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 850;
@@ -95,19 +103,36 @@ public class Bomberman {
 		frame.setResizable(false);
 		frame.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		
 	}
 	public static void main(String[] args) {
-		
+		 
 		Bomberman game = new Bomberman();	// Skapar fönstret
-		game.createGame();			// Skapar alla spelobjekt
+		
 		game.createContainers();	// Skapar containrar och lägger till dom till fönstret
 		game.showWindow();			// Visar fönstret
-		game.startGame();			// Kör vårat tokfinskaa spel
+		while(true) {
+			
+			if(playAgain){
+				System.out.println("Started new afagame!!");
+				game.createGame();			// Skapar alla spelobjekt
+				game.startGame();			// Kör vårat tokfinskaa spel
+			}
+			
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		
+		}
+		
+	
 	}
 	
 	// Initialisera alla spelobjekt
 	public void createGame() {			
-		
 		gameBoard = new GameBoard(); // Skapar en spelplan
 		gameBoard.resetBoard();		// Återställer spelplanen till grundläget
 					
@@ -163,7 +188,7 @@ public class Bomberman {
 			
 			@Override
 			public void keyPressed(KeyEvent key) { // En knapp har trycks. Oj oj
-			
+						
 				int k = key.getKeyCode();
 				
 				// Loopar igenom alla spelare
@@ -194,7 +219,18 @@ public class Bomberman {
 							}
 						}
 					}
-				}				
+				}		
+				
+				// Keyinput när spelet är över
+				if(!playAgain)  {
+					if(k == KeyEvent.VK_ENTER) {
+						playAgain = true;
+					} else if (k == KeyEvent.VK_ESCAPE) {
+						//QUIT AND WRITER
+						System.exit(0);
+					}
+				}
+				
 			}
 			
 			@Override
@@ -223,10 +259,11 @@ public class Bomberman {
 		//1000 / 60 = 16.666... ms = 60fps
 		long currentTime, diff;
 		long oldTime = System.currentTimeMillis();		
-	
+		
 		long gameTime = 120 * 1000;
 		
-		while(ongoing) {
+		while(true) {
+			
 			currentTime = System.currentTimeMillis(); // Nuvanrande tiden
 			diff = currentTime - oldTime; // Skillnaden mellan förra sparade tid			
 				
@@ -235,14 +272,13 @@ public class Bomberman {
 				oldTime = currentTime; // Sparar undan tiden
 				gameTime -= diff; // Minskar spelklockan med differensen
 				
-
-				// Hämtar spelplanen
+					// Hämtar spelplanen
 				int[][] tmpBoard = gameBoard.getBoard();
 				
 				// Updaterar spelet
-				updateGame(tmpBoard, currentTime);				
-
-				// Ritar om spelplanen
+				if(!updateGame(tmpBoard, currentTime))
+					break;
+					// Ritar om spelplanen
 				// Här skapar vi nya objekt eftersom vi inte vill att objektet ska ändras
 				// under utskriften. Trådar är fan farliga!!!				
 				gameGraphics.drawGame(tmpBoard, new ArrayList<Player>(players), new HashSet<Bomb>(bombs));	
@@ -259,17 +295,23 @@ public class Bomberman {
 				// Tar bort stenar om endgame är på
 				else {
 					gameBoard.updateEndgame(currentTime);
-					
+						
 				}	
-			}				
+			}
+			
+			//Vill du spela igen?
+		  playAgain = false;
 		}
 		
 		
 		System.out.println("Game has ended: Press *THIS BUTTON* to start a new game.");
+		
 	}
 	
-	public void updateGame(int[][] board, long currentTime) {
-				
+	public boolean updateGame(int[][] board, long currentTime) {
+						
+		boolean shouldContinue = true;
+		
 		Iterator<Bomb> itBomb = bombs.iterator();
 		Bomb tmpBomb;
 		//Går igenom bomberna och kollar om någon har detonerat. I så fall tar vi bort bomben
@@ -315,17 +357,21 @@ public class Bomberman {
 				playersAlive++;
 			}
 		}
+			
 		
 		// Spelet slutar i remi
 		if(playersAlive == 0) {
-			ongoing = false;
+			System.out.println("Draw");
+			shouldContinue = false;
 		} 
 		//Vi har en vinnare
 		else if (playersAlive == 1) { 
 			System.out.println("Winner is: Player number " + (winnerID[0]-4) +  "!");
-			ongoing = false;
+			shouldContinue = false;
 		}
 		
+		infoTitle.setText("GAME OVER! PRESS ENTER TO PLAY AGIEN! ESC TO QUIT.");
+		return shouldContinue;
 	}
 	
 	
