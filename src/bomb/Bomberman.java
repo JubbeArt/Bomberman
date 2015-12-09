@@ -139,6 +139,7 @@ public class Bomberman {
 		players = new ArrayList<Player>();
 		players.add(new Player(0, 0));		// Lägger till två spelare vid olika kordinater
 		players.add(new Player(14, 0));
+		players.add(new Player(0, 14));
 		
 		// Mängder för bomber/explosioner
 		bombs = new HashSet<Bomb>();
