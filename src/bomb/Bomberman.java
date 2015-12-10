@@ -2,7 +2,6 @@ package bomb;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -39,12 +38,10 @@ import bomb.GameBoard.Square;
  * 
  * ALLT
  * 
+ * Fixa så att explosioner kan överlappa
+ * Fixa spelar-id vid flera rundor
  * 
  * Fixa coola utskrifter när spelet är slut
- * Fixa alternativ att starta nytt spel
- * spela flera spel
- * powerups
- * 
  * 
  * */
 
@@ -123,12 +120,9 @@ public class Bomberman {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
-			
+			}			
 		
-		}
-		
-	
+		}	
 	}
 	
 	// Initialisera alla spelobjekt
@@ -139,7 +133,8 @@ public class Bomberman {
 		players = new ArrayList<Player>();
 		players.add(new Player(0, 0));		// Lägger till två spelare vid olika kordinater
 		players.add(new Player(14, 0));
-		players.add(new Player(0, 14));
+		//players.add(new Player(0, 14));
+		//players.add(new Player(14, 14));
 		
 		// Mängder för bomber/explosioner
 		bombs = new HashSet<Bomb>();
@@ -248,7 +243,7 @@ public class Bomberman {
 		frame.add(windowContainer);
 	}
 	
-	public void showWindow() {		
+	public void showWindow() {
 		// "Packeterar" och visar fönstret
 		frame.pack();
 		frame.setVisible(true);

@@ -19,7 +19,6 @@ public class Player extends Entity {
 	private int bombLimit;	// Hur många bomber spelaren kan lägga ut samtidigt
 	private int bombsUsed; 	// Hur många bomber spelaren nuvarande har utlagda
 	private static int playerID = 5;	// Ett statiskt ID för spelaren. Detta ökar för varje skapade spelare
-	
 	// Ett random objekt för en random rgb-färg
 	private static Random rand = new Random();	
 	
@@ -54,7 +53,7 @@ public class Player extends Entity {
 		
 		int id = get(x, y);
 		
-		if(id == Square.EMPTY.getID() || id == Square.EXPLOSION.getID()) {
+		if(id == Square.EMPTY.getID() || id == Square.EXPLOSION.getID() || id == Square.POWERUP.getID()) {
 			xPos = x;
 			yPos = y;			
 		}	
@@ -73,7 +72,16 @@ public class Player extends Entity {
 		int id = get(xPos, yPos);
 		
 		if(id == Square.EXPLOSION.getID() || id == Square.STONE.getID())
-			hitPoints--;		
+			hitPoints--;
+		else if(id == Square.POWERUP.getID()) {
+			if(rand.nextBoolean())
+				addPower(1);
+			else
+				addBombs(1);
+			
+			setSquare(xPos, yPos, Square.EMPTY.getID());
+		}
+			
 	}
 	
 	/*
@@ -94,7 +102,7 @@ public class Player extends Entity {
 		return false;
 	}
 	
-	public void changeBombLimit(int b) {
+	public void addBombs(int b) {
 		bombLimit += b;
 	}
 	

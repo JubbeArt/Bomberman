@@ -26,7 +26,8 @@ public class GameBoard {
 						STONE(1, Color.gray), 
 						CRATE(2, new Color(139, 69, 19)),
 						BOMB(3, Color.black),
-						EXPLOSION(4, Color.orange);
+						EXPLOSION(4, Color.orange),
+						POWERUP(5, new Color(114, 16, 35));
 		
 		private int ID;
 		private Color color;
@@ -144,7 +145,7 @@ public class GameBoard {
 	
 	// Kollar om den ska lägga till en till sten
 	public void updateEndgame(long currentTime) {
-		if((startStoneTime - currentTime) % 50 == 0)
+		if((currentTime - startStoneTime) % 150 < 17)
 			addStone();
 	}
 	

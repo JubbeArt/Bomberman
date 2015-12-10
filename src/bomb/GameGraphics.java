@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +36,7 @@ public class GameGraphics extends JPanel{
 	
 	// Alla objekt som ska ritas ut
 	private int[][] board = new int[15][15];
-	private Set<Bomb> bombs = new HashSet<Bomb>();
+	//private Set<Bomb> bombs = new HashSet<Bomb>();
 	private List<Player> players = new ArrayList<Player>();
 
 	// Swing-objekt för utritning
@@ -51,7 +50,7 @@ public class GameGraphics extends JPanel{
 	// Hämtar alla objekt som ska skrivas ut och kallar på repaint, (som i sin tur kallar på paintComponent).
 	public void drawGame(int[][] board, List<Player> players, Set<Bomb> bombs) {
 		this.board = board;	
-		this.bombs = bombs;
+		//this.bombs = bombs;
 		this.players = players;
 		repaint();
 	}
@@ -61,15 +60,34 @@ public class GameGraphics extends JPanel{
 	public void paintComponent(Graphics g) {
 		g2 = (Graphics2D) g; // "Bättre" objekt för ritning (nyare + mer funktionalitet, inte så viktigt)
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // PIXIEGNOMS FRÅN CORNWALL
-			
+		g2.setStroke(new BasicStroke(2));	
+		
+		
 		int boardSize = 15; // Antal rutor på spelplanen (i x- och y-led)
 		int boxWidth = GAME_WIDTH / boardSize; // Hur stor en ruta är
 					
 		// Ritar ut varje ruta på spelplanen (t.ex. låder och stenar)
 		for(int x = 0; x < board.length; x++) {
 			for(int y = 0; y < board[x].length; y++) {
-				g2.setColor(Square.values()[board[x][y]].getColor());
-				g2.fillRect(x * boxWidth, y * boxWidth, boxWidth, boxWidth);					
+				
+				
+				if(board[x][y] == Square.BOMB.getID()) {		
+					g2.setColor(Square.EMPTY.getColor());
+					g2.fillRect(x * boxWidth, y * boxWidth, boxWidth, boxWidth);	
+				} else if(board[x][y] == Square.POWERUP.getID()){
+					g2.setColor(Square.EMPTY.getColor());
+					g2.fillRect(x * boxWidth, y * boxWidth, boxWidth, boxWidth);	
+					
+					g2.setColor(Square.POWERUP.getColor());					
+					g2.fillRect(x * boxWidth + 15, y * boxWidth + 15, boxWidth - 30, boxWidth - 30);
+					
+					g2.setColor(Color.black);
+					g2.drawRect(x * boxWidth + 15, y * boxWidth + 15, boxWidth - 30, boxWidth - 30);
+				} else {
+					g2.setColor(Square.values()[board[x][y]].getColor());
+					g2.fillRect(x * boxWidth, y * boxWidth, boxWidth, boxWidth);
+				}
+				
 			}			
 		}
 
@@ -81,12 +99,14 @@ public class GameGraphics extends JPanel{
 			}
 		}
 		
-		// Ritar ut bomberna
-		for(Bomb b : bombs) {
-			g2.setColor(b.getColor());
-			g2.fillRect(b.getX() * boxWidth + 18, b.getY() * boxWidth + 18, 15, 15);		
+		for(int x = 0; x < board.length; x++) {
+			for(int y = 0; y < board[x].length; y++) {
+				if(board[x][y] == Square.BOMB.getID()) {
+					g2.setColor(Square.BOMB.getColor());
+					g2.fillArc(x * boxWidth + 18, y * boxWidth + 18, 15, 15, 0, 360);
+				}
+			}
 		}
-		
 		
 		// Sätter storleken på borsten till 4 pixlar
 		g2.setStroke(new BasicStroke(4));

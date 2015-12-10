@@ -1,6 +1,7 @@
 package bomb;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 /*
@@ -17,6 +18,7 @@ public class Bomb extends Entity {
 	private long startTime;		// När bomben lades ner
 	private long timeToExplode;	// Hur lång tid innan bomben sprängs i millisekunder
 	private int owner;			// Dess ägare
+	private static Random rand = new Random();	// Random för powerups
 	
 	// Matematiska operatorer
 	// add = addition
@@ -44,6 +46,8 @@ public class Bomb extends Entity {
 		startTime = time;
 				
 		timeToExplode = 1300;
+	
+		updatePos(xPos, yPos);
 	}
 	
 	// Exploderar bomben och retunerar alla platser som blev explosions-objekt
@@ -85,9 +89,17 @@ public class Bomb extends Entity {
 				int id = get(pos[0], pos[1]);
 								
 				// Om det är en låda eller bara en tom plats så vill vi skapa en explosion
-				if(id == Square.CRATE.getID() || id == Square.EMPTY.getID()) {
+				if(id == Square.EMPTY.getID() || id == Square.EXPLOSION.getID()) {
 					setSquare(pos[0], pos[1], Square.EXPLOSION.getID());
 					tmpSet.add(new Explosion(pos[0], pos[1], currentTime));
+				} else if(id == Square.CRATE.getID()) {
+
+					if(rand.nextBoolean())
+						setSquare(pos[0], pos[1], Square.POWERUP.getID());
+					else {
+						setSquare(pos[0], pos[1], Square.EXPLOSION.getID());
+						tmpSet.add(new Explosion(pos[0], pos[1], currentTime));
+					}
 				}
 				
 				// Om den träffade en sten eller en låda så vill vi sluta explosionen i den riktningen
