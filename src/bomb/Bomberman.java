@@ -88,7 +88,7 @@ public class Bomberman {
 	// Storlekar på fönstret och alla containrar (JPanel)
 	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 850;
 	private final int GAME_WIDTH = 750, GAME_HEIGHT = 750;
-	private final int INFO_WIDTH = 750, INFO_HEIGHT = 100;
+	private final int INFO_WIDTH = 750, INFO_HEIGHT = 20;
 	
 	// Titlen på spelet såklart
 	private String title = "BOMBERMAN!!�1!";
@@ -221,6 +221,7 @@ public class Bomberman {
 				if(!playAgain)  {
 					if(k == KeyEvent.VK_ENTER) {
 						playAgain = true;
+						Player.resetID();
 					} else if (k == KeyEvent.VK_ESCAPE) {
 						//QUIT AND WRITER
 						System.exit(0);
@@ -234,7 +235,7 @@ public class Bomberman {
 
 			@Override
 			public void keyTyped(KeyEvent key) {}
-		});
+			});
 		
 		// Rätt container får fokus, så vi faktist kan få keyboard-input
 		windowContainer.setFocusable(true);		

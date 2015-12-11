@@ -94,7 +94,7 @@ public class Bomb extends Entity {
 					tmpSet.add(new Explosion(pos[0], pos[1], currentTime));
 				} else if(id == Square.CRATE.getID()) {
 
-					if(rand.nextBoolean())
+					if(rand.nextInt(100) < 30) //30 % spwn rate
 						setSquare(pos[0], pos[1], Square.POWERUP.getID());
 					else {
 						setSquare(pos[0], pos[1], Square.EXPLOSION.getID());

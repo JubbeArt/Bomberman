@@ -117,4 +117,8 @@ public class Player extends Entity {
 	public int getBombsUsed() {
 		return bombsUsed;
 	}
+	
+	public static void resetID() {
+		playerID = 5;
+	}
 }
