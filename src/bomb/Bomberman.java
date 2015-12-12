@@ -91,7 +91,7 @@ public class Bomberman {
 	private final int INFO_WIDTH = 750, INFO_HEIGHT = 20;
 	
 	// Titlen på spelet såklart
-	private String title = "BOMBERMAN!!�1!";
+	private String title = "BOMBERMAN";
 	
 	public Bomberman() {				
 		frame = new JFrame("Bomberman! av Sam und Jazz"); 	// Själva fönstret
@@ -111,7 +111,6 @@ public class Bomberman {
 		while(true) {
 			
 			if(playAgain){
-				System.out.println("Started new afagame!!");
 				game.createGame();			// Skapar alla spelobjekt
 				game.startGame();			// Kör vårat tokfinskaa spel
 			}
@@ -235,7 +234,7 @@ public class Bomberman {
 
 			@Override
 			public void keyTyped(KeyEvent key) {}
-			});
+		});
 		
 		// Rätt container får fokus, så vi faktist kan få keyboard-input
 		windowContainer.setFocusable(true);		

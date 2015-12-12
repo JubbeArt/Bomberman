@@ -21,6 +21,8 @@ public class Explosion extends Entity{
 
 	// Retunerar sant om explosione nska försvinna
 	public boolean update(long currentTime) {
+		updatePos(xPos, yPos);	
+		
 		if(currentTime - startTime > timeToDisappear)
 			return true;
 		return false;
