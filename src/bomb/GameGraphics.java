@@ -90,11 +90,23 @@ public class GameGraphics extends JPanel{
 				
 			}			
 		}
-
+		
 		// Ritar ut spelarna
 		for(Player p : players) {			
-			if(p.isAlive()) {			
-				g2.setColor(p.getColor());
+			if(p.isAlive()) {	
+
+				g2.setColor(p.getColor());					
+				
+				for(Player p2 : players) {
+					if(p.getX() == p2.getX() && p.getY() == p2.getY() && p.getID() != p2.getID()) { // Två spelare står på varandra
+						int red = (p.getColor().getRed() + p2.getColor().getRed()) / 2;
+						int green = (p.getColor().getGreen() + p2.getColor().getGreen()) / 2;
+						int blue = (p.getColor().getBlue() + p2.getColor().getBlue()) / 2;
+						
+						g2.setColor(new Color(red, green ,blue));
+					}
+				}
+				
 				g2.fillRect(p.getX() * boxWidth, p.getY() * boxWidth, boxWidth, boxWidth);	
 			}
 		}
