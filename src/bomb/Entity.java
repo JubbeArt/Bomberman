@@ -36,7 +36,7 @@ public class Entity extends GameBoard {
 		color = c;		
 	}
 	
-	// Updeterar dess position i rutnätet, notera alla alla Entities inte är i rutnätet (spelarna och bomberna)
+	// Updaterar dess position i rutnätet, notera alla alla Entities inte är i rutnätet (spelarna och bomberna)
 	public void updatePos(int x, int y) {
 		setSquare(x, y, ID);		
 	}

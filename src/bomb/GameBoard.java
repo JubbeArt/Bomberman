@@ -21,7 +21,7 @@ public class GameBoard {
 	private long startStoneTime;
 	
 	
-	// Mall för hur våra rutor ska se ut
+	// Mall för hur våra rutor ska se ut (id, färg)
 	public enum Square {EMPTY(0, Color.white), 
 						STONE(1, Color.gray), 
 						CRATE(2, new Color(139, 69, 19)),

@@ -19,7 +19,7 @@ public class Explosion extends Entity{
 		timeToDisappear = 400; // 400 millisekunder
 	}
 
-	// Retunerar sant om explosione nska försvinna
+	// Retunerar sant om explosionerna ska försvinna
 	public boolean update(long currentTime) {
 		updatePos(xPos, yPos);	
 		

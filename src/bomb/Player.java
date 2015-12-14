@@ -67,7 +67,7 @@ public class Player extends Entity {
 		move(xPos, yPos + y);		
 	}
 	
-	// Kollar om spelaren står på en explosion eller en sten (tar då skada)
+	// Kollar om spelaren står på en explosion, sten (tar då skada) eller power-up
 	public void update() {	
 		int id = get(xPos, yPos);
 		
@@ -86,8 +86,7 @@ public class Player extends Entity {
 	
 	/*
 	 * Getters och setter för spelaren 
-	 * */
-	
+	 * */	
 	public int getPower() {
 		return power;
 	}

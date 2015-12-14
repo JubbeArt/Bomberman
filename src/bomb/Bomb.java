@@ -60,56 +60,58 @@ public class Bomb extends Entity {
 		long currentTime = System.currentTimeMillis();
 		
 		// Sätter bombens plats till en explosion, detta kommer alltid ske ju.
-		setSquare(xPos, yPos, Square.EXPLOSION.getID()); // Uppdaterar spelplanen
-		tmpSet.add(new Explosion(xPos, yPos, currentTime)); // Skapar ett explosions-objekt
-		
-		
-		 // Loopar igenom alla håll som bomben kan explodera
-		for(int i = 0; i < directions.length; i++) { 
+		if(get(xPos, yPos) != Square.STONE.getID()) {
+			setSquare(xPos, yPos, Square.EXPLOSION.getID()); // Uppdaterar spelplanen
+			tmpSet.add(new Explosion(xPos, yPos, currentTime)); // Skapar ett explosions-objekt
 			
-			// Loopar igenom hur långt bombmen ska sprängas
-			for(int p = 1; p <= power; p++) {			
+			
+			 // Loopar igenom alla håll som bomben kan explodera
+			for(int i = 0; i < directions.length; i++) { 
 				
-				// Mitten av explosionen
-				int[] pos = {xPos, yPos};
-								
-				// Kolla vad man ska öka/miska för att gå åt ett håll
-				for(int xy = 0; xy < pos.length; xy++) { 
-					if(directions[i][xy] == Change.add)
-						pos[xy] += p;
-					else if(directions[i][xy] == Change.sub)
-						pos[xy] -= p;				
-				}
-				
-				// Om explosionen går utanför banan så går vi vidare till nästa riktnig
-				if(!checkInBounds(pos[0], pos[1]))
-					break;
-				
-				// Hämtar vilket slags block vi kollar på
-				int id = get(pos[0], pos[1]);
-								
-				// Om det är en låda eller bara en tom plats så vill vi skapa en explosion
-				if(id == Square.EMPTY.getID() || id == Square.EXPLOSION.getID()) {
-					setSquare(pos[0], pos[1], Square.EXPLOSION.getID());
-					tmpSet.add(new Explosion(pos[0], pos[1], currentTime));
-				} else if(id == Square.CRATE.getID()) {
-
-					if(rand.nextInt(100) < 30) //30 % spwn rate
-						setSquare(pos[0], pos[1], Square.POWERUP.getID());
-					else {
+				// Loopar igenom hur långt bombmen ska sprängas
+				for(int p = 1; p <= power; p++) {			
+					
+					// Mitten av explosionen
+					int[] pos = {xPos, yPos};
+									
+					// Kolla vad man ska öka/miska för att gå åt ett håll
+					for(int xy = 0; xy < pos.length; xy++) { 
+						if(directions[i][xy] == Change.add)
+							pos[xy] += p;
+						else if(directions[i][xy] == Change.sub)
+							pos[xy] -= p;				
+					}
+					
+					// Om explosionen går utanför banan så går vi vidare till nästa riktnig
+					if(!checkInBounds(pos[0], pos[1]))
+						break;
+					
+					// Hämtar vilket slags block vi kollar på
+					int id = get(pos[0], pos[1]);
+									
+					// Om det är en låda, tom plats eller redan en explsion
+					if(id == Square.EMPTY.getID() || id == Square.EXPLOSION.getID()) {
 						setSquare(pos[0], pos[1], Square.EXPLOSION.getID());
 						tmpSet.add(new Explosion(pos[0], pos[1], currentTime));
+					} else if(id == Square.CRATE.getID()) {
+						
+						//Slumpar om det ska skapas en power-up
+						if(rand.nextInt(100) < 30) //30 % spwn rate
+							setSquare(pos[0], pos[1], Square.POWERUP.getID());
+						else {
+							setSquare(pos[0], pos[1], Square.EXPLOSION.getID());
+							tmpSet.add(new Explosion(pos[0], pos[1], currentTime));
+						}
 					}
+					
+					// Om den träffade en sten eller en låda så vill vi sluta explosionen i den riktningen
+					if(id == Square.STONE.getID() || id == Square.CRATE.getID())
+						break;				
 				}
-				
-				// Om den träffade en sten eller en låda så vill vi sluta explosionen i den riktningen
-				if(id == Square.STONE.getID() || id == Square.CRATE.getID())
-					break;				
 			}
 		}
-
-		return tmpSet;
 		
+		return tmpSet;
 	}
 	
 	

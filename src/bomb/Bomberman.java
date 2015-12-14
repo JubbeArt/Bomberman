@@ -28,7 +28,7 @@ import bomb.GameBoard.Square;
  * Three years later he died of lung cancer. It was really sad and destroyed me. 
  * My mother said to me- "Don't ever smoke. Please don't put your family through what your Grandfather put us through." 
  * I agreed. At 28, I have never touched a cigarette. 
- * I must say, I feel a very slight sense of regret for never having done it, because your post gave me game anyway.
+ * I must say, I feel a very slight sense of regret for never having done it, because your game gave me cancer anyway.
  * 
  * @author Baron Jesper Wrang (jeswr740) and Lord Samuel von Johansson (samjo788)
  *
@@ -38,15 +38,17 @@ import bomb.GameBoard.Square;
  * 
  * ALLT
  * 
- * Fixa så att explosioner kan överlappa
- * Fixa spelar-id vid flera rundor
  * 
  * Fixa coola utskrifter när spelet är slut
- * 
+ * Skapa resultatfil
+ * Spränga bort power-ups?
+ * Olika gamemodes, t.ex. 100 % power-ups
+ * Fixa så att man kan spela med flera liv (nu tar man 1 dmg per varv)
+ * Modullera ännu fler saker, t.ex. vars hos Bomb och Player
  * */
 
 /*
- * Mainklassen för vårt tonfika spel. Supersmasikt ju, eller vad snycks?
+ * Mainklassen för vårt tonflinka spel. Supersmasikt ju, eller vad snycks?
  * 
  * Klassen tar hand om alla swing- samt spelobjekt.
  * 
@@ -244,7 +246,7 @@ public class Bomberman {
 	}
 	
 	public void showWindow() {
-		// "Packeterar" och visar fönstret
+		// "Paketerar" och visar fönstret
 		frame.pack();
 		frame.setVisible(true);
 	}
@@ -252,7 +254,7 @@ public class Bomberman {
 	
 	// Startar spelet!!!! WOOHOOHOHOHOO LETS PLAY BITCHES
 	public void startGame() {	
-		//1000 / 60 = 16.666... ms = 60fps
+		
 		long currentTime, diff;
 		long oldTime = System.currentTimeMillis();		
 		
@@ -262,8 +264,9 @@ public class Bomberman {
 			
 			currentTime = System.currentTimeMillis(); // Nuvanrande tiden
 			diff = currentTime - oldTime; // Skillnaden mellan förra sparade tid			
-				
-			// Det har gått 1000/60 millisekunder sedan senaste sparande
+			
+			//1000 / 60 = 16.666... ms = 60fps
+			// Det har gått 1000/60 ms sedan senaste sparande
 			if(diff > 17) {
 				oldTime = currentTime; // Sparar undan tiden
 				gameTime -= diff; // Minskar spelklockan med differensen
