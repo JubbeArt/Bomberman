@@ -18,7 +18,11 @@ public class Player extends Entity {
 	private int power;		// Hur kraftfulla spelarens bomber är
 	private int bombLimit;	// Hur många bomber spelaren kan lägga ut samtidigt
 	private int bombsUsed; 	// Hur många bomber spelaren nuvarande har utlagda
+	private int wins;
 	private static int playerID = 5;	// Ett statiskt ID för spelaren. Detta ökar för varje skapade spelare
+	
+	private int startX, startY;
+	
 	// Ett random objekt för en random rgb-färg
 	private static Random rand = new Random();	
 	
@@ -33,11 +37,26 @@ public class Player extends Entity {
 		
 		playerID++;
 			
+		startX = x;
+		startY = y;
+		
 		power = 1;
 		bombLimit = 1;
 		bombsUsed = 0;	
 		hitPoints = 1;
+		wins = 0;
 	}
+	
+	public void resetPlayer() {
+		
+		power = 1;
+		bombLimit = 1;
+		bombsUsed = 0;	
+		hitPoints = 1;		
+		yPos = startY;
+		xPos = startX;
+	}
+	
 
 	/*
 	 * Förflyttar spelaren
@@ -119,5 +138,13 @@ public class Player extends Entity {
 	
 	public static void resetID() {
 		playerID = 5;
+	}
+	
+	public void addWin(){
+		wins++;
+	}
+	
+	public int getWins() {
+		return wins;
 	}
 }

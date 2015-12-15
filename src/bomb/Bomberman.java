@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,19 +36,6 @@ import bomb.GameBoard.Square;
  * @author Baron Jesper Wrang (jeswr740) and Lord Samuel von Johansson (samjo788)
  *
  */
-
-/* TODO:
- * 
- * ALLT
- * 
- * 
- * Fixa coola utskrifter när spelet är slut
- * Skapa resultatfil
- * Spränga bort power-ups?
- * Olika gamemodes, t.ex. 100 % power-ups
- * Fixa så att man kan spela med flera liv (nu tar man 1 dmg per varv)
- * Modullera ännu fler saker, t.ex. vars hos Bomb och Player
- * */
 
 /*
  * Mainklassen för vårt tonflinka spel. Supersmasikt ju, eller vad snycks?
@@ -82,15 +72,15 @@ public class Bomberman {
 	
 	//Kontroll variabler för spelets gång
 	private int playersAlive;
-	private int winnerID[] = new int[4];
 	
-	private static boolean playAgain = true;
-	
+	private static boolean playAgain = true;	
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
-	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 850;
+	
 	private final int GAME_WIDTH = 750, GAME_HEIGHT = 750;
-	private final int INFO_WIDTH = 750, INFO_HEIGHT = 20;
+	private final int INFO_WIDTH = 750, INFO_HEIGHT = 75;	
+	private final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = GAME_HEIGHT + INFO_HEIGHT;
+	
 	
 	// Titlen på spelet såklart
 	private String title = "BOMBERMAN";
@@ -110,10 +100,12 @@ public class Bomberman {
 		
 		game.createContainers();	// Skapar containrar och lägger till dom till fönstret
 		game.showWindow();			// Visar fönstret
+		game.createPlayers();
+
 		while(true) {
-			
+		
 			if(playAgain){
-				game.createGame();			// Skapar alla spelobjekt
+				game.resetGame();			// Skapar alla spelobjekt
 				game.startGame();			// Kör vårat tokfinskaa spel
 			}
 			
@@ -127,15 +119,20 @@ public class Bomberman {
 	}
 	
 	// Initialisera alla spelobjekt
-	public void createGame() {			
-		gameBoard = new GameBoard(); // Skapar en spelplan
-		gameBoard.resetBoard();		// Återställer spelplanen till grundläget
-					
+	public void createPlayers() {			
 		players = new ArrayList<Player>();
 		players.add(new Player(0, 0));		// Lägger till två spelare vid olika kordinater
 		players.add(new Player(14, 0));
 		//players.add(new Player(0, 14));
 		//players.add(new Player(14, 14));
+	}	
+	
+	public void resetGame() {			
+		gameBoard = new GameBoard(); // Skapar en spelplan
+		gameBoard.resetBoard();		// Återställer spelplanen till grundläget
+		
+		for(Player p: players)
+			p.resetPlayer();
 		
 		// Mängder för bomber/explosioner
 		bombs = new HashSet<Bomb>();
@@ -222,9 +219,8 @@ public class Bomberman {
 				if(!playAgain)  {
 					if(k == KeyEvent.VK_ENTER) {
 						playAgain = true;
-						Player.resetID();
 					} else if (k == KeyEvent.VK_ESCAPE) {
-						//QUIT AND WRITER
+						saveResults();
 						System.exit(0);
 					}
 				}
@@ -254,11 +250,11 @@ public class Bomberman {
 	
 	// Startar spelet!!!! WOOHOOHOHOHOO LETS PLAY BITCHES
 	public void startGame() {	
-		
+		infoTitle.setText("<html><h2>" + title + "</h2></html>");
 		long currentTime, diff;
 		long oldTime = System.currentTimeMillis();		
 		
-		long gameTime = 120 * 1000;
+		long gameTime = 90 * 1000;
 		
 		while(true) {
 			
@@ -297,14 +293,10 @@ public class Bomberman {
 						
 				}	
 			}
-			
 			//Vill du spela igen?
 		  playAgain = false;
 		}
-		
-		
-		System.out.println("Game has ended: Press *THIS BUTTON* to start a new game.");
-		
+		infoTitle.setText("<html><h2>GAME OVER! PRESS ENTER TO PLAY AGIEN! ESC TO QUIT.</h2></html>");
 	}
 	
 	public boolean updateGame(int[][] board, long currentTime) {
@@ -351,8 +343,6 @@ public class Bomberman {
 		for(Player p : players) {
 			if(p.isAlive()) {
 				p.update(); 	// Kollar om spelaren ska ta skada
-				
-				winnerID[playersAlive] = p.getID();
 				playersAlive++;
 			}
 		}
@@ -360,17 +350,43 @@ public class Bomberman {
 		
 		// Spelet slutar i remi
 		if(playersAlive == 0) {
-			System.out.println("Draw");
+			infoTime.setText("You all suck!!!!!");
 			shouldContinue = false;
 		} 
 		//Vi har en vinnare
 		else if (playersAlive == 1) { 
-			System.out.println("Winner is: Player number " + (winnerID[0]-4) +  "!");
+			for(Player p : players) {
+				if(p.isAlive()) {
+					infoTime.setText("Player " + (p.getID() - 4) +" won! All other suck dick!");
+					p.addWin();
+				}
+			}
+			
 			shouldContinue = false;
 		}
 		
-		infoTitle.setText("GAME OVER! PRESS ENTER TO PLAY AGIEN! ESC TO QUIT.");
+		
 		return shouldContinue;
+	}
+	
+	public void saveResults() {
+		
+		PrintWriter writer;
+		
+		try {
+			writer = new PrintWriter("BMResult.txt", "UTF-8");
+			writer.println("HighScore");
+			for(Player p : players)
+				writer.println("Player " + (p.getID()-4) + " won " + p.getWins() + " times!");
+				
+			writer.close();	
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}	
+	
 	}
 	
 	
