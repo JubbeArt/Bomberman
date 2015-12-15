@@ -9,13 +9,16 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.BoxLayout;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import bomb.GameBoard.Square;
@@ -62,7 +65,6 @@ import bomb.GameBoard.Square;
  * Fixa stöd för andra spelplaner som textfiler
  * Skapa spelare styrs av variable
  * Skriva ut antal vinster för varje spelare (i realtid)
- * Spelarstatistik(?)
  * Autogenerera klassdiagram
  * 
  * Fixa fularvet
@@ -91,8 +93,10 @@ public class Bomberman {
 	
 	//Kontroll variabler för spelets gång
 	private int playersAlive;
+	private static boolean playAgain = true;
 	
-	private static boolean playAgain = true;	
+	// Den valda banan
+	private static String currentMap;
 	
 	// Storlekar på fönstret och alla containrar (JPanel)
 	
@@ -117,11 +121,39 @@ public class Bomberman {
 	public static void main(String[] args) {
 		 
 		Bomberman game = new Bomberman();	// Skapar fönstret
+		Boolean hasErrors;
+		int amountOfPlayers = 0;
+		
+		// Hämtar input från användren.... vilket jävla idiot, bara kolla på hur många checks vi många göra...
+		do {
+			hasErrors = false;
+			String answer = JOptionPane.showInputDialog("The amout of players sir (2-4).... Don't be an idiot!");
+
+			if(answer == null) // Någon tryckte på avbryt
+				System.exit(0);
+			
+			try{
+				amountOfPlayers = Integer.parseInt(answer);			
+			} catch(InputMismatchException e) {
+				hasErrors = true;
+			} catch(NumberFormatException e) {
+				hasErrors = true;
+			}	
+			
+			if(amountOfPlayers > 4 || amountOfPlayers < 2)
+				hasErrors = true;
+	
+		} while(hasErrors);
+		
+		// Map input
+		currentMap = JOptionPane.showInputDialog("The map of your choice SIRRRR!!", "default.txt");
+		if(currentMap == null)
+			System.exit(0);
 		
 		game.createContainers();	// Skapar containrar och lägger till dom till fönstret
 		game.showWindow();			// Visar fönstret
-		game.createPlayers();
-
+		game.createPlayers(amountOfPlayers);
+		
 		while(true) {
 		
 			if(playAgain){
@@ -139,18 +171,26 @@ public class Bomberman {
 	}
 	
 	// Initialisera alla spelarobjekt
-	public void createPlayers() {			
-		players = new ArrayList<Player>();
-		players.add(new Player(0, 0));		// Lägger till två spelare vid olika kordinater
-		players.add(new Player(14, 0));
-		players.add(new Player(0, 14));
-		players.add(new Player(14, 14));
+	public void createPlayers(int amountOfPlayers) {			
+		players = new ArrayList<Player>();		
+		
+		int startPos[][] = {
+				{0, 0},
+				{14, 0},
+				{0, 14},
+				{14, 14}				
+		};
+		
+		for(int i = 0; i < amountOfPlayers; i++) {
+			players.add(new Player(startPos[i][0], startPos[i][1]));
+		}
+
 	}	
 	
 	//Återställer alla objekt
 	public void resetGame() {			
 		gameBoard = new GameBoard(); // Skapar en spelplan
-		gameBoard.resetBoard();		// Återställer spelplanen till grundläget
+		gameBoard.resetBoard(currentMap);		// Återställer spelplanen till grundläget
 		
 		for(Player p: players)
 			p.resetPlayer();
@@ -231,6 +271,7 @@ public class Bomberman {
 													System.currentTimeMillis()
 													));
 								players.get(i).changeBombsUsed(1);	// Ökar spelarens lagda bomber med 1
+								players.get(i).addTotalBombs();
 							}
 						}
 					}
@@ -276,7 +317,7 @@ public class Bomberman {
 		long oldTime = System.currentTimeMillis();		
 		
 		long gameTime = 90 * 1000;
-		
+				
 		while(true) {
 			
 			currentTime = System.currentTimeMillis(); // Nuvanrande tiden
@@ -287,38 +328,59 @@ public class Bomberman {
 			if(diff > 17) {
 				oldTime = currentTime; // Sparar undan tiden
 				gameTime -= diff; // Minskar spelklockan med differensen
+							
 				
-					// Hämtar spelplanen
+				// Kollar om det är dags att börja "slutspelet", då en stenorm kommer och äter upp världen
+				if(gameTime <= 0 && !gameBoard.isEndgame())
+					gameBoard.startEndgame(currentTime);				
+				
+				// Uppdaterar spelormen
+				if(gameBoard.isEndgame()) {
+					gameBoard.updateEndgame(currentTime);
+					gameTime = 0;
+				}	
+									
+				// Uppdaterar infon om tiden och spelarvinster
+				updateGameInfo(gameTime);
+				
+				// Hämtar spelplanen
 				int[][] tmpBoard = gameBoard.getBoard();
 				
 				// Updaterar spelet
-				if(!updateGame(tmpBoard, currentTime))
+				if(!updateGame(tmpBoard, currentTime)) {
+					updateGameInfo(gameTime);
 					break;
-					// Ritar om spelplanen
+				}
+				// Ritar om spelplanen
 				// Här skapar vi nya objekt eftersom vi inte vill att objektet ska ändras
 				// under utskriften. Trådar är fan farliga!!!				
 				gameGraphics.drawGame(tmpBoard, new ArrayList<Player>(players), new HashSet<Bomb>(bombs));	
 				
-				// Uppdaterar tiden
-				if(gameTime > 0)
-					infoTime.setText("Time : " + String.format( "%.2f", gameTime / 1000.0) +" s left"); 
-								
-				// Om tiden tar slut är det dags att börja skapa "stenormen" som går genom spelplanen. Spelet måste ju ta slut ju!!!
-				else if(!gameBoard.isEndgame()) {
-					gameBoard.startEndgame(currentTime);					
-					infoTime.setText("TIME IS RUNNING OUT!!!");
-				} 
-				// Tar bort stenar om endgame är på
-				else {
-					gameBoard.updateEndgame(currentTime);
-						
-				}	
 			}
 			//Vill du spela igen?
 		  playAgain = false;
 		}
-		infoTitle.setText("<html><h2>GAME OVER! PRESS ENTER TO PLAY AGIEN! ESC TO QUIT.</h2></html>");
+		//infoTitle.setText("<html><h2>GAME OVER! PRESS ENTER TO PLAY AGIEN! ESC TO QUIT.</h2></html>");
 	}
+	
+	// Uppdaterar infon om tiden och spelarvinster
+	public void updateGameInfo(long gameTime) {
+		
+		// Skriver ut tid och hur många gånger spelarna har vunnit
+		String infoString = "";
+		
+		for(int i = 0; i < players.size(); i++) {
+			infoString += String.format("%-33s", "Player " + (i+1) + " : " + players.get(i).getTotalWins());
+			if(i == 1 || players.size() < 2)
+				infoString += String.format("%-30s", "Time : " + String.format( "%.2f", gameTime / 1000.0) + " s");
+			
+		}
+		
+		// Skriver ut texten
+		infoTime.setText(infoString);
+		
+	}
+	
 	
 	//Uppdaterar spelet
 	public boolean updateGame(int[][] board, long currentTime) {
@@ -372,15 +434,15 @@ public class Bomberman {
 		
 		// Spelet slutar i remi
 		if(playersAlive == 0) {
-			infoTime.setText("You all suck!!!!!");
+			infoTitle.setText("<html><h2>You all suck!!!!! ENTER TO PLAY AGAIN!!! Esc to exit!</h2></html>");
 			shouldContinue = false;
 		} 
 		//Vi har en vinnare
 		else if (playersAlive == 1) { 
 			for(Player p : players) {
 				if(p.isAlive()) {
-					infoTime.setText("Player " + (p.getID() - 4) +" won! All other suck dick!");
-					p.addWin();
+					infoTitle.setText("<html><h2>Player " + (p.getID() - 4) +" won! ENTER TO PLAY AGAIN!!! Esc to exit!</h2></html>");
+					p.addTotalWins();
 				}
 			}
 			
@@ -398,10 +460,13 @@ public class Bomberman {
 		
 		try {
 			writer = new PrintWriter("BMResult.txt", "UTF-8");
-			writer.println("HighScore");
-			for(Player p : players)
-				writer.println("Player " + (p.getID()-4) + " won " + p.getWins() + " times!");
-				
+			writer.println("Game stats\n");
+			for(Player p : players) {
+				writer.println("Player " + (p.getID()-4));
+				writer.println("\tWins : " + p.getTotalWins());
+				writer.println("\tBombs : " + p.getTotalBombs());
+				writer.println("\tPowerups : " + p.getTotalPowerUps());
+			}
 			writer.close();	
 			
 		} catch (FileNotFoundException e) {

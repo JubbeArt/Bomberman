@@ -1,6 +1,14 @@
 package bomb;
 
 import java.awt.Color;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
+
+import javax.swing.JOptionPane;
 /*
  * Huvudklass för spelplanen och alla dess rutor.
  * 
@@ -19,7 +27,6 @@ public class GameBoard {
 	private int stoneY = 14;
 	private boolean isEndgame = false;
 	private long startStoneTime;
-	
 	
 	// Mall för hur våra rutor ska se ut (id, färg)
 	public enum Square {EMPTY(0, Color.white), 
@@ -48,33 +55,43 @@ public class GameBoard {
 	} 
 	
 	// Återställer spelplanen till grundläget
-	public void resetBoard(){
+	public void resetBoard(String currentMap){
+					
+		// Läser in en bana (en textfil)
+		Scanner file = null;
+		try {
+			file = new Scanner(new FileReader(currentMap));
+			String line;
+			
+			int y = 0;
+			
+			while(file.hasNextLine()) {
+				line = file.nextLine();
 				
-		// Lådor
-		for(int i = 0; i < 15; i++)
-			for(int j = 0; j < 15; j++)
-				board[i][j] = Square.CRATE.getID();
-		
-		// Stenar
-		for(int i = 1; i<14; i+=2)
-			for(int j = 1; j<14; j+=2)
-				board[i][j] = Square.STONE.getID();
-
-		int empty = Square.EMPTY.getID();
-		
-		// Tomma platser (alla hörn)
-		for(int i = 0; i < 2; i++) {
-			board[0][i] = empty;
-			board[0][i + 13] = empty;
-			board[14][i] = empty;
-			board[14][i + 13] = empty;
+				System.out.println(line);
+								
+				for(int x = 0; x < line.length() && x < board.length; x++) {
+					board[x][y] =  Character.getNumericValue(line.charAt(x));		
+			
+					// Koll för felaktiga värden
+					if(board[x][y] < 0 || board[x][y] > Square.POWERUP.getID()) {
+						JOptionPane.showMessageDialog(null, "Unallowed character in file.... (0-5 is allowed)");
+						System.exit(1);						
+					}
+				}		
+				
+				y++;
+				if(y >= board.length) // Säkerhetskoll om vi skulle ha för lång textfil
+					break;
+			}	
+						
+		} catch(FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "File not found.... -.- closing down boys!!!");
+			System.exit(1);
+		} finally {
+			file.close();
 		}
-		
-		for(int i = 1; i < 14; i+=12) {
-			board[i][0] = empty;
-			board[i][14] = empty;			
-		}	
-		
+				
 	}	
 		
 	// Retunerar en plats på planen

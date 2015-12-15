@@ -18,7 +18,11 @@ public class Player extends Entity {
 	private int power;		// Hur kraftfulla spelarens bomber är
 	private int bombLimit;	// Hur många bomber spelaren kan lägga ut samtidigt
 	private int bombsUsed; 	// Hur många bomber spelaren nuvarande har utlagda
-	private int wins;
+	
+	private int totalWins; // Spelarstatistik
+	private int totalBombs;
+	private int totalPowerUps;	
+	
 	private static int playerID = 5;	// Ett statiskt ID för spelaren. Detta ökar för varje skapade spelare
 	
 	private int startX, startY;
@@ -44,7 +48,10 @@ public class Player extends Entity {
 		bombLimit = 1;
 		bombsUsed = 0;	
 		hitPoints = 1;
-		wins = 0;
+
+		totalWins = 0;
+		totalBombs = 0;
+		totalPowerUps = 0;
 	}
 	
 	//Återställer spelaren
@@ -76,6 +83,9 @@ public class Player extends Entity {
 			xPos = x;
 			yPos = y;			
 		}	
+		
+		if(id == Square.POWERUP.getID())
+			addTotalPowerUps();
 	}
 	
 	//Flyttar spelaren i x-led
@@ -139,11 +149,27 @@ public class Player extends Entity {
 		return bombsUsed;
 	}
 		
-	public void addWin(){
-		wins++;
+	public void addTotalWins(){
+		totalWins++;
 	}
 	
-	public int getWins() {
-		return wins;
+	public int getTotalWins() {
+		return totalWins;
+	}
+	
+	public void addTotalBombs() {
+		totalBombs++;
+	}
+	
+	public int getTotalBombs() {
+		return totalBombs;
+	}
+	
+	public void addTotalPowerUps() {
+		totalPowerUps++;
+	}
+
+	public int getTotalPowerUps() {
+		return totalPowerUps;
 	}
 }
