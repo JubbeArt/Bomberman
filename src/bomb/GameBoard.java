@@ -66,10 +66,9 @@ public class GameBoard {
 			int y = 0;
 			
 			while(file.hasNextLine()) {
-				line = file.nextLine();
+				line = file.nextLine(); // Läser in en rad av av spelplanen
 				
-				System.out.println(line);
-								
+				// Loopar igeno en rad
 				for(int x = 0; x < line.length() && x < board.length; x++) {
 					board[x][y] =  Character.getNumericValue(line.charAt(x));		
 			
@@ -89,7 +88,8 @@ public class GameBoard {
 			JOptionPane.showMessageDialog(null, "File not found.... -.- closing down boys!!!");
 			System.exit(1);
 		} finally {
-			file.close();
+			if(file != null)
+				file.close();
 		}
 				
 	}	

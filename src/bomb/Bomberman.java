@@ -174,6 +174,9 @@ public class Bomberman {
 	public void createPlayers(int amountOfPlayers) {			
 		players = new ArrayList<Player>();		
 		
+		// Startpositioner för spelarna, dom här är satta av traditionella skäl och inte av lathet.
+		// Utan dom här startpositionerna skulle inte spelet vara de samma och den skulle förlora all sin
+		// spelbarhet och själ.
 		int startPos[][] = {
 				{0, 0},
 				{14, 0},
