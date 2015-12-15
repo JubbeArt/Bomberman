@@ -51,6 +51,25 @@ import bomb.GameBoard.Square;
  * I spelloopen kallas updateGame och drawGame som ser till att spelet går på.
  * */
 
+/*
+ * TODO
+ * TODO
+ * TODO TODO TODO
+ * TO DO DODO
+ * DO DODO
+ * TO DO DO DODO
+ * 
+ * Fixa stöd för andra spelplaner som textfiler
+ * Skapa spelare styrs av variable
+ * Skriva ut antal vinster för varje spelare (i realtid)
+ * Spelarstatistik(?)
+ * Autogenerera klassdiagram
+ * 
+ * Fixa fularvet
+ * 
+ * 
+ * 
+ * */
 public class Bomberman {
 
 	// Objekt för swing
@@ -94,6 +113,7 @@ public class Bomberman {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		
 	}
+	
 	public static void main(String[] args) {
 		 
 		Bomberman game = new Bomberman();	// Skapar fönstret
@@ -118,15 +138,16 @@ public class Bomberman {
 		}	
 	}
 	
-	// Initialisera alla spelobjekt
+	// Initialisera alla spelarobjekt
 	public void createPlayers() {			
 		players = new ArrayList<Player>();
 		players.add(new Player(0, 0));		// Lägger till två spelare vid olika kordinater
 		players.add(new Player(14, 0));
-		//players.add(new Player(0, 14));
-		//players.add(new Player(14, 14));
+		players.add(new Player(0, 14));
+		players.add(new Player(14, 14));
 	}	
 	
+	//Återställer alla objekt
 	public void resetGame() {			
 		gameBoard = new GameBoard(); // Skapar en spelplan
 		gameBoard.resetBoard();		// Återställer spelplanen till grundläget
@@ -241,14 +262,14 @@ public class Bomberman {
 		frame.add(windowContainer);
 	}
 	
+	// "Paketerar" och visar fönstret
 	public void showWindow() {
-		// "Paketerar" och visar fönstret
 		frame.pack();
 		frame.setVisible(true);
 	}
 	
 	
-	// Startar spelet!!!! WOOHOOHOHOHOO LETS PLAY BITCHES
+	// Startar spelet!!!!
 	public void startGame() {	
 		infoTitle.setText("<html><h2>" + title + "</h2></html>");
 		long currentTime, diff;
@@ -299,6 +320,7 @@ public class Bomberman {
 		infoTitle.setText("<html><h2>GAME OVER! PRESS ENTER TO PLAY AGIEN! ESC TO QUIT.</h2></html>");
 	}
 	
+	//Uppdaterar spelet
 	public boolean updateGame(int[][] board, long currentTime) {
 						
 		boolean shouldContinue = true;
@@ -369,6 +391,7 @@ public class Bomberman {
 		return shouldContinue;
 	}
 	
+	//Sparar senaste resultaten i en textfil
 	public void saveResults() {
 		
 		PrintWriter writer;
@@ -388,6 +411,5 @@ public class Bomberman {
 		}	
 	
 	}
-	
 	
 }

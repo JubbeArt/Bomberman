@@ -47,8 +47,8 @@ public class Player extends Entity {
 		wins = 0;
 	}
 	
+	//Återställer spelaren
 	public void resetPlayer() {
-		
 		power = 1;
 		bombLimit = 1;
 		bombsUsed = 0;	
@@ -78,10 +78,12 @@ public class Player extends Entity {
 		}	
 	}
 	
+	//Flyttar spelaren i x-led
 	public void moveX(int x) {	
 		move(xPos + x, yPos);
 	}
-		
+	
+	//Flyttar spelaren i y-led
 	public void moveY(int y) {	
 		move(xPos, yPos + y);		
 	}
@@ -106,6 +108,7 @@ public class Player extends Entity {
 	/*
 	 * Getters och setter för spelaren 
 	 * */	
+	
 	public int getPower() {
 		return power;
 	}
@@ -135,11 +138,7 @@ public class Player extends Entity {
 	public int getBombsUsed() {
 		return bombsUsed;
 	}
-	
-	public static void resetID() {
-		playerID = 5;
-	}
-	
+		
 	public void addWin(){
 		wins++;
 	}

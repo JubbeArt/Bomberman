@@ -27,7 +27,7 @@ import bomb.GameBoard.Square;
  * */
 public class GameGraphics extends JPanel{
 
-	// Slut klaga eclipse....
+	// Sluta klaga eclipse....
 	private static final long serialVersionUID = -1482084293493657149L;
 	
 	// Storleken på panelen
@@ -111,6 +111,8 @@ public class GameGraphics extends JPanel{
 			}
 		}
 		
+		
+		// Ritar ut bomber
 		for(int x = 0; x < board.length; x++) {
 			for(int y = 0; y < board[x].length; y++) {
 				if(board[x][y] == Square.BOMB.getID()) {

@@ -47,7 +47,7 @@ public class GameBoard {
 	
 	} 
 	
-	// Återställer sprlplanen till grundläget
+	// Återställer spelplanen till grundläget
 	public void resetBoard(){
 				
 		// Lådor
@@ -82,7 +82,7 @@ public class GameBoard {
 		return board[x][y];		
 	}
 	
-	// Sätter en ruta på spelplanen till den entity som skickas in
+	// Sätter en ruta på spelplanen till det id som skickas in
 	protected void setSquare(int x, int y, int id){
 		board[x][y] = id;
 	}
@@ -92,7 +92,7 @@ public class GameBoard {
 		return board;
 	}
 	
-	// Kommer om en punkt är inom våran spelplan
+	// Kollar om en punkt är inom våran spelplan
 	protected boolean checkInBounds(int x, int y) {
 		if(x < 0 || x > 14 || y < 0 || y > 14)
 			return false;

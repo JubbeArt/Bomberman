@@ -44,7 +44,7 @@ public class Entity extends GameBoard {
 	/*
 	 * Getters och setter för objektet
 	 * */
-		
+	
 	public int getX() {
 		return xPos;
 	}
